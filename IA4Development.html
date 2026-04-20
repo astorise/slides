@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Engineering Synthetic Empathy — L'IA au service du Développement Logiciel</title>
+
+    <meta name="description" content="L'IA au service du Développement Logiciel">
+    <meta name="author" content="Sébastien ASTORI">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="./css/reveal.css">
+    <link rel="stylesheet" href="./css/theme/black.css" id="theme">
+    <link rel="stylesheet" href="./lib/css/zenburn.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+    <link rel="stylesheet" type="text/css" href="./css/print/paper.css">
+
+    <style>
+        :root {
+            --accent-1: #ff006e;
+            --accent-2: #8338ec;
+            --accent-3: #3a86ff;
+            --accent-4: #06ffa5;
+            --accent-5: #ffbe0b;
+            --ink: #f5f5f7;
+            --ink-dim: #b8b8c4;
+            --ink-mute: #7a7a88;
+            --bg-0: #0a0a12;
+            --bg-1: #12121e;
+            --bg-2: #1a1a2e;
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        .reveal {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 400;
+            color: var(--ink);
+        }
+
+        body.reveal-viewport,
+        .reveal .backgrounds {
+            background: radial-gradient(ellipse at top left, #1a0b2e 0%, #0a0a12 45%, #0a0a12 100%) !important;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            text-transform: none;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .reveal h1 {
+            font-size: 2.8em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 50%, #f0abfc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3em;
+        }
+
+        .reveal h2 {
+            font-size: 1.8em;
+            color: var(--ink);
+            margin-bottom: 0.5em;
+        }
+
+        .reveal h3 {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--ink-dim);
+        }
+
+        .reveal h4 {
+            font-size: 1.05em;
+            color: var(--accent-3);
+            font-weight: 600;
+            letter-spacing: 0;
+        }
+
+        .reveal p, .reveal li {
+            font-size: 0.65em;
+            line-height: 1.55;
+            color: var(--ink-dim);
+        }
+
+        .reveal strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .reveal em {
+            color: var(--accent-4);
+            font-style: italic;
+        }
+
+        .reveal ul, .reveal ol {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .reveal ul li {
+            position: relative;
+            padding-left: 1.4em;
+            margin-bottom: 0.5em;
+        }
+
+        .reveal ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 0.5em;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            border-radius: 2px;
+        }
+
+        .reveal ul ul li::before {
+            background: var(--accent-3);
+        }
+
+        /* ===== SLIDE COMPONENTS ===== */
+
+        .slide-tag {
+            display: inline-block;
+            padding: 0.35em 0.9em;
+            font-size: 0.45em;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.2), rgba(255, 0, 110, 0.2));
+            border: 1px solid rgba(131, 56, 236, 0.4);
+            border-radius: 100px;
+            color: #e0aaff;
+            margin-bottom: 1em;
+        }
+
+        .section-divider {
+            text-align: center;
+        }
+
+        .section-divider .chapter-number {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.4em;
+            color: var(--accent-5);
+            margin-bottom: 0.3em;
+            letter-spacing: 0.05em;
+        }
+
+        .section-divider h1 {
+            font-size: 3em;
+            margin-bottom: 0.4em;
+        }
+
+        .section-divider .subtitle {
+            font-size: 0.55em;
+            color: var(--ink-mute);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1em;
+            margin-top: 0.8em;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1em 1.2em;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 0.7em;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 0.4em;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .card-body {
+            font-size: 0.55em;
+            color: var(--ink-dim);
+            line-height: 1.5;
+        }
+
+        .card.accent-1 { border-left: 3px solid var(--accent-1); }
+        .card.accent-2 { border-left: 3px solid var(--accent-2); }
+        .card.accent-3 { border-left: 3px solid var(--accent-3); }
+        .card.accent-4 { border-left: 3px solid var(--accent-4); }
+        .card.accent-5 { border-left: 3px solid var(--accent-5); }
+
+        /* Verbatim (blockquote) */
+        .verbatim {
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.08), rgba(58, 134, 255, 0.05));
+            border: 1px solid rgba(131, 56, 236, 0.2);
+            border-left: 4px solid var(--accent-2);
+            border-radius: 12px;
+            padding: 1em 1.4em;
+            margin: 0.8em auto;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.7em;
+            line-height: 1.6;
+            color: #e8e8f0;
+            max-width: 90%;
+            position: relative;
+        }
+
+        .verbatim::before {
+            content: '"';
+            position: absolute;
+            top: -0.3em;
+            left: 0.2em;
+            font-size: 3em;
+            color: rgba(131, 56, 236, 0.25);
+            font-family: 'Playfair Display', serif;
+            line-height: 1;
+        }
+
+        .persona-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6em;
+            margin-bottom: 0.2em;
+        }
+
+        .persona-emoji {
+            font-size: 1.8em;
+        }
+
+        .jtbd {
+            display: inline-block;
+            font-size: 0.55em;
+            font-weight: 500;
+            color: var(--accent-4);
+            background: rgba(6, 255, 165, 0.08);
+            border: 1px solid rgba(6, 255, 165, 0.2);
+            padding: 0.3em 0.8em;
+            border-radius: 100px;
+            margin-bottom: 0.6em;
+        }
+
+        .question-label {
+            font-size: 0.5em;
+            font-style: italic;
+            color: var(--ink-mute);
+            margin-bottom: 0.5em;
+        }
+
+        /* LLM cards */
+        .llm-card {
+            max-width: 85%;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.2em 1.5em;
+            text-align: left;
+        }
+
+        .llm-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8em;
+            margin-bottom: 0.3em;
+        }
+
+        .llm-badge {
+            font-size: 0.5em;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 0.3em 0.7em;
+            border-radius: 6px;
+            color: #000;
+            background: var(--accent-3);
+        }
+
+        .llm-badge.gpt { background: linear-gradient(135deg, #10a37f, #06ffa5); }
+        .llm-badge.grok { background: linear-gradient(135deg, #1d9bf0, #3a86ff); }
+        .llm-badge.deepseek { background: linear-gradient(135deg, #4d6bfe, #8338ec); }
+        .llm-badge.mistral { background: linear-gradient(135deg, #ff7000, #ffbe0b); color: #000; }
+        .llm-badge.gemini { background: linear-gradient(135deg, #4285f4, #c4b5fd); }
+        .llm-badge.claude { background: linear-gradient(135deg, #d97757, #f0abfc); }
+
+        .llm-name {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .llm-archetype {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.7em;
+            color: var(--accent-5);
+            margin-bottom: 0.8em;
+        }
+
+        /* Feature boxes */
+        .feature-box {
+            display: flex;
+            gap: 0.8em;
+            align-items: flex-start;
+            margin: 0.5em 0;
+            padding: 0.6em 0.8em;
+            background: var(--glass);
+            border-radius: 10px;
+            border-left: 2px solid var(--accent-3);
+        }
+
+        .feature-icon {
+            font-size: 1.3em;
+            line-height: 1;
+        }
+
+        .feature-content {
+            font-size: 0.6em;
+            text-align: left;
+            color: var(--ink-dim);
+        }
+
+        .feature-content strong {
+            display: block;
+            color: var(--ink);
+            margin-bottom: 0.2em;
+        }
+
+        /* KPI / Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin: 1em 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-label {
+            font-size: 0.45em;
+            color: var(--ink-mute);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.3em;
+        }
+
+        /* Call-out box */
+        .callout {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.08), rgba(255, 190, 11, 0.05));
+            border: 1px solid rgba(255, 0, 110, 0.25);
+            border-radius: 12px;
+            padding: 0.9em 1.2em;
+            margin: 0.8em auto;
+            max-width: 85%;
+            font-size: 0.65em;
+            color: #ffd6e7;
+        }
+
+        .callout strong {
+            color: var(--accent-1);
+        }
+
+        .callout.info {
+            background: linear-gradient(135deg, rgba(58, 134, 255, 0.08), rgba(131, 56, 236, 0.05));
+            border-color: rgba(58, 134, 255, 0.25);
+            color: #c8d9ff;
+        }
+
+        .callout.info strong { color: var(--accent-3); }
+
+        .callout.success {
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.08), rgba(58, 134, 255, 0.05));
+            border-color: rgba(6, 255, 165, 0.25);
+            color: #b8ffd9;
+        }
+
+        .callout.success strong { color: var(--accent-4); }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.4em;
+            margin-bottom: 0.1em;
+        }
+
+        .title-slide .tagline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1em;
+            color: var(--accent-5);
+            margin: 0.8em 0;
+        }
+
+        .title-slide .warning {
+            font-size: 0.5em;
+            color: var(--ink-mute);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 1.2em;
+            padding: 0.4em 1em;
+            display: inline-block;
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+        }
+
+        /* Two column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5em;
+            text-align: left;
+        }
+
+        .col h4 {
+            margin-bottom: 0.4em;
+        }
+
+        /* Final slide */
+        .final-slide {
+            text-align: center;
+        }
+
+        .final-slide h1 {
+            font-size: 4em;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-style: italic;
+        }
+
+        /* Utility */
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .small {
+            font-size: 0.55em;
+            color: var(--ink-mute);
+        }
+
+        .center { text-align: center; }
+        .muted { color: var(--ink-mute); }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Fix reveal.js block quotes */
+        .reveal blockquote {
+            background: none;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+        }
+
+        /* Progress bar */
+        .reveal .progress {
+            color: var(--accent-2);
+            height: 3px;
+        }
+
+        .reveal .controls {
+            color: var(--accent-2);
+        }
+
+        /* ===== DEV-SPECIFIC COMPONENTS ===== */
+
+        /* Project badges — 3 projets récurrents */
+        .project-badge {
+            display: inline-block;
+            font-size: 0.5em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 0.25em 0.7em;
+            border-radius: 100px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+        .project-badge.tachyon {
+            background: linear-gradient(135deg, #8338ec, #3a86ff);
+        }
+        .project-badge.hyperdesk {
+            background: linear-gradient(135deg, #ff006e, #ff7000);
+        }
+        .project-badge.pulse {
+            background: linear-gradient(135deg, #06ffa5, #3a86ff);
+            color: #000;
+        }
+
+        /* Project cards for the 3 terrains */
+        .terrain-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.2em 1em;
+            text-align: center;
+        }
+        .terrain-card.tachyon { border-top: 3px solid #8338ec; }
+        .terrain-card.hyperdesk { border-top: 3px solid #ff006e; }
+        .terrain-card.pulse { border-top: 3px solid #06ffa5; }
+
+        .terrain-emoji {
+            font-size: 2.2em;
+            margin-bottom: 0.2em;
+            display: block;
+        }
+        .terrain-name {
+            font-size: 0.85em;
+            font-weight: 700;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+        .terrain-mode {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.55em;
+            color: var(--accent-5);
+            margin: 0.3em 0 0.6em;
+        }
+        .terrain-body {
+            font-size: 0.55em;
+            color: var(--ink-dim);
+            line-height: 1.5;
+        }
+        .terrain-body strong {
+            display: block;
+            margin-top: 0.4em;
+            color: var(--accent-3);
+        }
+
+        /* Code blocks */
+        .reveal pre {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.9), rgba(10, 10, 20, 0.95));
+            border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--accent-3);
+            border-radius: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            padding: 0.8em 1em;
+            margin: 0.6em auto;
+            max-width: 92%;
+            width: fit-content;
+            font-size: 0.55em;
+            line-height: 1.5;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .reveal pre code {
+            background: transparent;
+            color: #e0e0e8;
+            padding: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1em;
+            line-height: 1.5;
+        }
+
+        .reveal code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88em;
+            background: rgba(131, 56, 236, 0.12);
+            color: #e0aaff;
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+        }
+
+        /* Dialog — échanges Moi/IA */
+        .dialog {
+            background: linear-gradient(135deg, rgba(15, 15, 25, 0.9), rgba(10, 10, 20, 0.95));
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1em 1.2em;
+            margin: 0.6em auto;
+            max-width: 90%;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55em;
+            line-height: 1.7;
+            text-align: left;
+        }
+        .dialog .who {
+            display: inline-block;
+            min-width: 5.5em;
+            font-weight: 700;
+        }
+        .dialog .who.me { color: var(--accent-4); }
+        .dialog .who.ai { color: var(--accent-3); }
+        .dialog .who.gemini { color: #c4b5fd; }
+        .dialog .who.claude { color: #f0abfc; }
+        .dialog .who.codex { color: #06ffa5; }
+        .dialog .line { display: block; margin: 0.2em 0; }
+        .dialog .annotation {
+            display: block;
+            color: var(--ink-mute);
+            font-style: italic;
+            margin: 0.2em 0 0.2em 0;
+            font-size: 0.95em;
+        }
+
+        /* Data tables */
+        .data-table {
+            width: 90%;
+            margin: 0.8em auto;
+            border-collapse: collapse;
+            font-size: 0.58em;
+            background: var(--glass);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .data-table th {
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.25), rgba(58, 134, 255, 0.15));
+            color: var(--ink);
+            font-weight: 700;
+            text-align: left;
+            padding: 0.7em 0.9em;
+            font-size: 0.95em;
+            letter-spacing: 0.02em;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .data-table td {
+            padding: 0.6em 0.9em;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--ink-dim);
+        }
+        .data-table tr:last-child td { border-bottom: none; }
+        .data-table tr:hover td { background: rgba(255, 255, 255, 0.02); }
+        .data-table td strong { color: var(--ink); }
+        .data-table td code {
+            font-size: 0.88em;
+        }
+
+        /* Arrow annotation */
+        .arrow {
+            display: block;
+            margin: 0.6em auto;
+            font-size: 0.7em;
+            color: var(--accent-4);
+            text-align: center;
+            max-width: 85%;
+        }
+        .arrow strong { color: var(--ink); }
+
+        /* Numbered lessons */
+        .lessons {
+            max-width: 85%;
+            margin: 0.6em auto;
+            text-align: left;
+        }
+        .lesson {
+            display: flex;
+            gap: 1em;
+            padding: 0.7em 0;
+            border-bottom: 1px solid var(--glass-border);
+            align-items: flex-start;
+        }
+        .lesson:last-child { border-bottom: none; }
+        .lesson-num {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            min-width: 1.2em;
+            line-height: 1;
+        }
+        .lesson-content {
+            font-size: 0.6em;
+            color: var(--ink-dim);
+            line-height: 1.5;
+        }
+        .lesson-content strong {
+            display: block;
+            color: var(--ink);
+            margin-bottom: 0.2em;
+        }
+
+        /* Pattern number decoration */
+        .pattern-num {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.8em;
+            color: var(--accent-5);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.4em;
+        }
+</style>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body style="transition: -webkit-transform 0.8s ease;">
+
+    <div class="reveal slide" role="application" data-transition-speed="default" data-background-transition="fade">
+
+        <div class="slides">
+                <!-- ============================================ -->
+                <!-- SLIDE 1 : TITRE -->
+                <!-- ============================================ -->
+                <section class="title-slide">
+                    <span class="slide-tag">REX · Partie 1</span>
+                    <h1>Développer<br>avec l'IA</h1>
+                    <p class="tagline">Ma méthodologie</p>
+                    <p class="small muted" style="margin-top: 1em;">
+                        Illustrée par 3 cas :
+                        <span class="project-badge tachyon">Tachyon-Mesh</span>
+                        <span class="project-badge hyperdesk">HyperDeskVR</span>
+                        <span class="project-badge pulse">Pulse-Engine</span>
+                    </p>
+                    <div class="warning">Sébastien ASTORI · 2026</div>
+                    <aside class="notes">Cette première partie présente ma méthodologie de travail avec plusieurs IA, illustrée par trois projets aux registres différents : un projet à blanc qui part de l'idée, un projet en conditions réelles qui gère crashs et régressions, et un projet exploratoire en terrain inconnu qui remonte un protocole par reverse-engineering.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- SLIDE 2 : LE VRAI SUJET -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🎯 Cadrage</span>
+                    <h2>Le vrai sujet</h2>
+                    <div class="callout">
+                        <strong>Ce n'est pas :</strong><br/>
+                        <ul style="margin-top: 0.4em;">
+                            <li>« comment construire un mesh FaaS »</li>
+                            <li>« comment développer pour un Quest »</li>
+                            <li>« comment rétro-ingénier un protocole Garmin »</li>
+                        </ul>
+                    </div>
+                    <div class="callout success">
+                        <strong>C'est :</strong> comment travailler avec <em>plusieurs IA</em> sans friction.
+                    </div>
+                    <p class="center small muted" style="margin-top: 0.6em;">Les trois projets sont des supports — ils servent à <strong>rendre les patterns tangibles</strong>.</p>
+                    <aside class="notes">Je le dis explicitement pour cadrer l'attention. Le détail technique des projets est volontairement secondaire : on s'arrêtera à chaque pattern, pas à chaque feature.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- SLIDE 3 : LES 3 TERRAINS -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🗺️ Les 3 terrains</span>
+                    <h2>Trois registres, trois approches</h2>
+                    <div class="cards">
+                        <div class="terrain-card tachyon">
+                            <span class="terrain-emoji">🧪</span>
+                            <div class="terrain-name">Tachyon-Mesh</div>
+                            <div class="terrain-mode">ex nihilo</div>
+                            <div class="terrain-body">
+                                Service mesh FaaS<br>
+                                <code>Rust · WASM · OpenSpec</code>
+                                <strong>Idée → spec → code</strong>
+                            </div>
+                        </div>
+                        <div class="terrain-card hyperdesk">
+                            <span class="terrain-emoji">🎯</span>
+                            <div class="terrain-name">HyperDeskVR</div>
+                            <div class="terrain-mode">en crise</div>
+                            <div class="terrain-body">
+                                Client RDP Quest 3<br>
+                                <code>C++ · FreeRDP</code>
+                                <strong>Code qui casse</strong>
+                            </div>
+                        </div>
+                        <div class="terrain-card pulse">
+                            <span class="terrain-emoji">🔍</span>
+                            <div class="terrain-name">Pulse-Engine</div>
+                            <div class="terrain-mode">en exploration</div>
+                            <div class="terrain-body">
+                                Reverse-eng Garmin<br>
+                                <code>Kotlin · BLE · protobuf</code>
+                                <strong>Boîte noire → spec</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="center small muted" style="margin-top: 0.8em;">Trois façons différentes de faire travailler les IA.</p>
+                    <aside class="notes">Tachyon part d'une idée pure, spécifie avant d'exécuter. HyperDeskVR part d'un bug qui casse un truc qui marchait, avec tout le rabbit hole que ça implique. Pulse-Engine part d'un APK inconnu qu'on démonte pour reconstruire un client autonome — sans savoir ce qu'on va trouver avant de le trouver.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- SLIDE 4 : LES 3 RYTHMES -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">⏱️ Les 3 rythmes</span>
+                    <h2>Chaque projet a sa cadence</h2>
+                    <div class="feature-box" style="border-left-color: #8338ec;">
+                        <div class="feature-icon">🧪</div>
+                        <div class="feature-content">
+                            <strong>Tachyon — linéaire</strong>
+                            <code>idée → spec → code → archive → spec suivante</code>
+                        </div>
+                    </div>
+                    <div class="feature-box" style="border-left-color: #ff006e;">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <strong>HyperDeskVR — cyclique en crise</strong>
+                            <code>symptôme → hypothèse → fix → test → régression → recommencer</code>
+                        </div>
+                    </div>
+                    <div class="feature-box" style="border-left-color: #06ffa5;">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-content">
+                            <strong>Pulse-Engine — en spirale</strong>
+                            <code>capture → décodage → implémentation → capture → pivot → spec</code>
+                        </div>
+                    </div>
+                    <div class="callout info" style="margin-top: 0.8em;">
+                        <strong>→</strong> La méthodologie doit s'adapter au <em>rythme</em> du projet, pas l'inverse.
+                    </div>
+                    <aside class="notes">Ces trois rythmes ne sont pas interchangeables. Essayer de faire du "spec-first" sur Pulse-Engine alors qu'on ne connaît pas le protocole serait une perte de temps. Essayer de faire du "exploratoire" sur Tachyon serait du brouillon perpétuel. La lecture du bon rythme est une compétence en soi.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- SLIDE 5 : LES 5 PATTERNS (TOC) -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Table des matières —</div>
+                    <h1>Les 5 patterns</h1>
+                    <div class="lessons" style="margin-top: 1.5em;">
+                        <div class="lesson">
+                            <div class="lesson-num">1</div>
+                            <div class="lesson-content"><strong>Taxonomie des IA</strong><em>le bon agent pour la bonne tâche</em></div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">2</div>
+                            <div class="lesson-content"><strong>Format pivot versionné</strong><em>le contrat entre agents</em></div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">3</div>
+                            <div class="lesson-content"><strong>Le dialogue comme outil de design</strong><em>itérer, challenger, pivoter</em></div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">4</div>
+                            <div class="lesson-content"><strong>Boucle d'exécution fermée</strong><em>apply → test → archive</em></div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">5</div>
+                            <div class="lesson-content"><strong>Checkpoints humains</strong><em>savoir où l'IA doit s'arrêter</em></div>
+                        </div>
+                    </div>
+                    <aside class="notes">Voici la table des matières méthodologique. Les 5 patterns restent invariants sur les 3 projets — ils s'adaptent mais ne changent pas de nature. C'est leur transposabilité qui fait leur valeur.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 1 DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Pattern 1 —</div>
+                    <h1>Taxonomie des IA</h1>
+                    <p class="subtitle">Le bon agent pour la bonne tâche</p>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 1 · ÉNONCÉ -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 1 · Énoncé</span>
+                    <h2>Scribe ≠ Collègue</h2>
+                    <p class="center">
+                        Une IA généraliste est un bon <strong>collègue</strong>, pas un bon <strong>scribe</strong>.<br>
+                        Une IA de code est un bon <strong>scribe</strong>, pas un bon <strong>collègue</strong>.
+                    </p>
+                    <div class="cards">
+                        <div class="card accent-2">
+                            <div class="card-title">🧠 Idéation</div>
+                            <div class="card-body">
+                                Challenger, pivoter, structurer<br>
+                                <strong style="color: var(--accent-5);">→ Gemini, Claude chat</strong>
+                            </div>
+                        </div>
+                        <div class="card accent-4">
+                            <div class="card-title">🛠️ Exécution</div>
+                            <div class="card-body">
+                                Appliquer, tester, commiter<br>
+                                <strong style="color: var(--accent-5);">→ Codex, Claude Code</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="callout" style="margin-top: 0.8em;">
+                        <strong>Les forcer à inverser les rôles coûte cher.</strong>
+                    </div>
+                    <aside class="notes">C'est le pattern fondateur. Sur les trois projets, j'ai maintenu la séparation. Gemini/Claude chat pour la dialectique d'architecture, Codex/Claude Code pour l'exécution disciplinée. Les inversions ponctuelles ont toujours produit du mauvais travail.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 1 · ILLUSTRATION -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 1 · Illustration</span>
+                    <h2>3 projets, 3 postures</h2>
+                    <p class="small"><span class="project-badge tachyon">Tachyon</span> <strong>Gemini en collègue :</strong></p>
+                    <div class="verbatim" style="font-size: 0.6em;">
+                        — Je vais injecter mes secrets via <code>env!</code> au build.<br>
+                        — ⚠️ Mauvaise pratique : <code>strings</code> sur le binaire les récupère en clair.
+                    </div>
+                    <p class="small"><span class="project-badge hyperdesk">HyperDeskVR</span> <strong>Claude Code en scribe :</strong></p>
+                    <div class="verbatim" style="font-size: 0.55em;">
+                        <code>xrAttachSessionActionSets</code> double-attach détecté. Commit <code>9c8df70</code>. CI run vert. APK installé. Camera grant.
+                    </div>
+                    <p class="small"><span class="project-badge pulse">Pulse-Engine</span> <strong>Codex en scribe ET collègue :</strong></p>
+                    <div class="verbatim" style="font-size: 0.55em;">
+                        Table <code>Metric.type</code> extraite de <code>classes9.dex</code>. 40 entrées. <code>SPO2</code> absent → inférence : passe par <code>HSAData</code>, pas par le flux live.
+                    </div>
+                    <aside class="notes">Le cas Pulse-Engine est intéressant parce que le reverse-engineering brouille la frontière entre scribe et collègue. Codex tabule (scribe), mais il doit aussi inférer ce que chaque code numérique veut dire (collègue). La séparation stricte ne tient plus, mais la taxonomie reste utile pour savoir dans quel mode on est à chaque tour.</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- PATTERN 2 DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Pattern 2 —</div>
+                    <h1>Format pivot<br>versionné</h1>
+                    <p class="subtitle">Le contrat entre agents</p>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 2 · ÉNONCÉ -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 2 · Énoncé</span>
+                    <h2>Un contrat stable ou ça diverge</h2>
+                    <p class="center">Dès qu'on travaille avec <strong>plusieurs agents</strong>, il faut un <strong>contrat stable</strong>.</p>
+                    <p class="center small muted">Sinon chaque agent réexplique tout, perd le contexte, diverge.</p>
+                    <h4 style="margin-top: 0.8em;">Le contrat doit être :</h4>
+                    <div class="cards">
+                        <div class="card accent-2">
+                            <div class="card-title">📝 Textuel</div>
+                            <div class="card-body">Markdown, YAML</div>
+                        </div>
+                        <div class="card accent-3">
+                            <div class="card-title">🗃️ Versionnable</div>
+                            <div class="card-body">Git</div>
+                        </div>
+                        <div class="card accent-4">
+                            <div class="card-title">✅ Validable</div>
+                            <div class="card-body">CLI ou schema</div>
+                        </div>
+                        <div class="card accent-5">
+                            <div class="card-title">👁️ Lisible</div>
+                            <div class="card-body">humain <em>et</em> agent</div>
+                        </div>
+                    </div>
+                    <aside class="notes">C'est le pattern le plus important du lot. Sans format pivot, travailler à plusieurs agents revient à copier-coller du contexte en permanence. Mais ce qui m'a surpris au fil des trois projets, c'est que le format pivot a plusieurs moments d'utilisation — pas seulement en design.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 2 · 3 MOMENTS -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 2 · 3 moments</span>
+                    <h2>Même outil, trois usages</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Moment</th>
+                                <th>Projet</th>
+                                <th>Usage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Design-time</strong></td>
+                                <td><span class="project-badge tachyon">Tachyon</span></td>
+                                <td>OpenSpec <em>avant</em> le code — contrat entre Gemini et Codex</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Runtime (crise)</strong></td>
+                                <td><span class="project-badge hyperdesk">HyperDeskVR</span></td>
+                                <td>« État des lieux » Markdown produit <em>pendant</em> une crise pour handoff</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rétrospectif</strong></td>
+                                <td><span class="project-badge pulse">Pulse-Engine</span></td>
+                                <td>OpenSpec <em>après</em> que le code marche — consolidation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="callout success" style="margin-top: 0.8em;">
+                        <strong>Un seul principe :</strong> un document textuel, versionné, lisible des deux côtés.
+                    </div>
+                    <aside class="notes">Cette triple facette m'a pris du temps à voir. Au début je pensais "format pivot = contrat préalable". Puis HyperDeskVR m'a montré l'usage runtime en crise. Puis Pulse-Engine m'a montré l'usage rétrospectif, qui est en fait très proche de la démarche ADR de certaines équipes. Même outil, trois moments.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 2 · ILLUSTRATION RÉTROSPECTIVE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 2 · Illustration</span>
+                    <h2>La spec rétrospective</h2>
+                    <p class="center small"><span class="project-badge pulse">Pulse-Engine</span> <em>quand le code marche déjà</em></p>
+                    <div class="verbatim">
+                        <strong style="color: var(--accent-4);">Moi :</strong> « Fais du rétro-engineering sur l'ensemble de ton travail pour créer les changes et spécifications OpenSpec en anglais. »
+                    </div>
+                    <p class="center small">Codex produit en une passe :</p>
+                    <div class="cards">
+                        <div class="card accent-3">
+                            <div class="card-title">📄 project.md</div>
+                        </div>
+                        <div class="card accent-2">
+                            <div class="card-title">📚 3 specs courantes</div>
+                            <div class="card-body"><code>android-dashboard</code> · <code>build-and-ci</code> · <code>garmin-live-telemetry</code></div>
+                        </div>
+                        <div class="card accent-4">
+                            <div class="card-title">🗄️ 3 changes archivés</div>
+                            <div class="card-body"><code>bootstrap</code> · <code>rename</code> · <code>implement-live-telemetry</code></div>
+                        </div>
+                        <div class="card accent-5">
+                            <div class="card-title">✅ Validation</div>
+                            <div class="card-body"><code>openspec validate --all</code></div>
+                        </div>
+                    </div>
+                    <div class="callout success" style="margin-top: 0.6em;">
+                        <strong>Les specs ne sont pas un mensonge</strong> — elles décrivent du comportement déjà éprouvé.
+                    </div>
+                    <aside class="notes">Ce moment a été révélateur. J'ai longtemps pensé qu'écrire des specs après coup était "de la triche". Pulse-Engine m'a convaincu du contraire : quand on explore, on ne *peut* pas speccer avant. Ce qu'on peut faire, c'est consolider à la fin ce qu'on a appris, pour que le projet suivant hérite de cette compréhension au lieu de la refaire.</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- PATTERN 3 DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Pattern 3 —</div>
+                    <h1>Le dialogue<br>comme outil de design</h1>
+                    <p class="subtitle">Itérer · challenger · pivoter</p>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 3 · ÉNONCÉ -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 3 · Énoncé</span>
+                    <h2>Sparring partner, pas oracle</h2>
+                    <p class="center">Une IA d'idéation n'est pas un <strong>oracle</strong><br>— c'est un <strong class="gradient-text">sparring partner</strong>.</p>
+                    <h4 style="margin-top: 0.8em; text-align: center;">La valeur naît de la boucle :</h4>
+                    <p class="center" style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 0.9em; color: var(--accent-5);">
+                        idée → objection → contre-proposition → pivot
+                    </p>
+                    <div class="callout" style="margin-top: 0.8em;">
+                        <strong>→</strong> Une réponse acceptée <em>du premier coup</em> est souvent une mauvaise réponse.
+                    </div>
+                    <aside class="notes">Ce pattern paraît évident mais beaucoup de gens utilisent les LLM comme des oracles. La vraie valeur d'une IA généraliste se révèle dans la dialectique, sur plusieurs tours.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 3 · ILLUSTRATION -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 3 · Illustration</span>
+                    <h2>Pivot concret sur Tachyon</h2>
+                    <p class="center small"><span class="project-badge tachyon">Tachyon</span> Générateur de CI/CD</p>
+                    <div class="dialog">
+                        <span class="line"><span class="who me">Moi</span>: « Je fais un frontend JS. »</span>
+                        <span class="line"><span class="who gemini">Gemini</span>: ⚠️ Supply chain attack, XSS, extensions.</span>
+                        <span class="line"><span class="who me">Moi</span>: « Et si je le fais en WASM ? »</span>
+                        <span class="line"><span class="who gemini">Gemini</span>: ✅ Sandbox isolée, crypto déterministe,</span>
+                        <span class="line" style="padding-left: 6.5em;">logique de validation partagée avec le host.</span>
+                    </div>
+                    <div class="callout success" style="margin-top: 0.6em;">
+                        <strong>→</strong> La solution finale n'a été proposée par <em>personne d'autre que la boucle</em>.
+                    </div>
+                    <aside class="notes">Si j'avais accepté la première proposition de Gemini (JS propre, bien structuré), j'aurais eu une solution correcte mais fragile. La version WASM n'a émergé qu'au tour 4 ou 5 du dialogue.</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- PATTERN 4 DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Pattern 4 —</div>
+                    <h1>Boucle d'exécution<br>fermée</h1>
+                    <p class="subtitle">Apply → test → archive</p>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 4 · ÉNONCÉ -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 4 · Énoncé</span>
+                    <h2>Une boucle fermée et vérifiable</h2>
+                    <pre><code> apply → validate → test → build → commit → push → archive
+    ↑                                                 │
+    └──────────────── change suivant ─────────────────┘</code></pre>
+                    <div class="callout">
+                        Chaque étape <strong>réussit</strong> ou <strong>échoue</strong> — pas de <em>« presque OK »</em>.
+                    </div>
+                    <aside class="notes">Ce pattern est celui qui rend l'exécution par IA rentable. Sans boucle fermée, l'agent avance en terrain flou et produit du code qui "semble marcher". Avec boucle fermée, il s'arrête proprement au premier échec et on reprend.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 4 · TROIS VARIANTES -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 4 · Variantes</span>
+                    <h2>Trois tempos, même pattern</h2>
+                    <div class="feature-box" style="border-left-color: #8338ec;">
+                        <div class="feature-icon">🧪</div>
+                        <div class="feature-content">
+                            <strong><span class="project-badge tachyon">Tachyon</span> · Boucle locale complète</strong>
+                            <code>cargo test → cargo build → git push → openspec archive</code><br>
+                            <em style="color: var(--accent-4); font-style: italic;">rapide, déterministe</em>
+                        </div>
+                    </div>
+                    <div class="feature-box" style="border-left-color: #ff006e;">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content">
+                            <strong><span class="project-badge hyperdesk">HyperDeskVR</span> · Boucle CI-only</strong>
+                            <code>gh workflow run → 3min → gh run download → adb install → logcat</code><br>
+                            <em style="color: var(--accent-5); font-style: italic;">lente, robuste</em>
+                        </div>
+                    </div>
+                    <div class="feature-box" style="border-left-color: #06ffa5;">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-content">
+                            <strong><span class="project-badge pulse">Pulse-Engine</span> · Boucle avec le monde physique</strong>
+                            <code>code → APK → rebranche → lance Garmin → « go » → btsnoop → décoder → code</code>
+                        </div>
+                    </div>
+                    <div class="callout info" style="margin-top: 0.6em;">
+                        <strong>→</strong> Quand il y a un device réel, <em>l'humain devient partie intégrante de la boucle</em>.
+                    </div>
+                    <aside class="notes">Cette slide est importante. La boucle d'exécution n'est pas qu'un enchaînement de commandes — c'est un contrat sur "qu'est-ce qui me dit que ça marche". Sur Tachyon, c'est les tests. Sur HyperDeskVR, c'est l'APK qui tourne sur le Quest. Sur Pulse-Engine, c'est un humain qui fait courir son fils avec une montre Garmin, capture le trafic BLE, et revient dire "voilà ce qu'on a capté". L'humain fait partie de la boucle.</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- PATTERN 5 DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Pattern 5 —</div>
+                    <h1>Checkpoints<br>humains</h1>
+                    <p class="subtitle">Savoir où l'IA doit s'arrêter</p>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 5 · ÉNONCÉ -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 5 · Énoncé</span>
+                    <h2>Savoir s'arrêter</h2>
+                    <p class="center">Un bon agent d'exécution <strong class="gradient-text">sait où il doit s'arrêter</strong>.</p>
+                    <h4 style="margin-top: 0.8em;">Raisons légitimes de s'arrêter :</h4>
+                    <div class="feature-box">
+                        <div class="feature-icon">🔗</div>
+                        <div class="feature-content"><strong>Dépendance manquante</strong>Une dépendance manque dans le repo.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">⚖️</div>
+                        <div class="feature-content"><strong>Arbitrage d'architecture</strong>Un arbitrage d'architecture est requis.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">⚠️</div>
+                        <div class="feature-content"><strong>Contradiction technique</strong>Le contexte technique contredit l'intention.</div>
+                    </div>
+                    <div class="feature-box" style="border-left-color: var(--accent-4);">
+                        <div class="feature-icon">🔬</div>
+                        <div class="feature-content"><strong>Pivot empirique</strong>Une observation empirique contredit l'hypothèse.</div>
+                    </div>
+                    <div class="callout" style="margin-top: 0.5em;">
+                        <strong>→</strong> L'agent qui ne s'arrête jamais <em>bricole</em>.
+                    </div>
+                    <aside class="notes">Les meilleurs moments avec Codex, ce sont ceux où il s'est arrêté. Pas ceux où il a livré. La 4e raison est venue avec Pulse-Engine : quand l'agent constate par capture réelle que son modèle mental du protocole était faux, il doit s'arrêter et pivoter.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 5 · ILLUSTRATION 1/3 -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 5 · 1/3</span>
+                    <h2>Bon checkpoint</h2>
+                    <p class="center small"><span class="project-badge tachyon">Tachyon</span> <code>ram-hibernation</code></p>
+                    <div class="verbatim">
+                        Je me suis arrêté parce que le dépôt n'a pas encore les fondations qu'il réclame.
+                    </div>
+                    <p class="center"><strong>Deux options présentées :</strong></p>
+                    <div class="cards">
+                        <div class="card accent-3">
+                            <div class="card-title">1 · Ordre strict</div>
+                            <div class="card-body">Garder l'ordre strict.</div>
+                        </div>
+                        <div class="card accent-4">
+                            <div class="card-title">2 · Dépendances</div>
+                            <div class="card-body">Réordonner par dépendances.</div>
+                        </div>
+                    </div>
+                    <div class="callout success" style="margin-top: 0.6em;">
+                        <strong>✅</strong> Décision d'architecte renvoyée à l'humain.
+                    </div>
+                    <aside class="notes">Comportement idéal : détecter un mélange de préoccupations, lister les options, attendre.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 5 · ILLUSTRATION 2/3 -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 5 · 2/3</span>
+                    <h2>Checkpoint manqué</h2>
+                    <p class="center small"><span class="project-badge tachyon">Tachyon</span> Incident <code>cwd</code></p>
+                    <div class="dialog">
+                        <span class="line"><span class="who me">Moi</span>: « Enchaîne sur les changes restants. »</span>
+                        <span class="line"><span class="who codex">Codex</span>: « Dans HyperDesk-MR, il n'y a aucun change actif. »</span>
+                        <span class="line"><span class="who me">Moi</span>: « Pourquoi tu me parles de HyperDesk-MR ? »</span>
+                        <span class="line"><span class="who codex">Codex</span>: « Ton dernier message m'a replacé dans</span>
+                        <span class="line" style="padding-left: 6.5em;"><code>cwd = c:\Users\astor\Git\HyperDesk-MR</code>. »</span>
+                    </div>
+                    <div class="callout">
+                        <strong>Signal technique vs intention conversationnelle.</strong><br>
+                        L'agent aurait dû <em>signaler l'incohérence</em>, pas la résoudre seul.
+                    </div>
+                    <aside class="notes">Ici Codex a choisi silencieusement. Il a suivi un signal technique et ignoré le fil de la conversation. Ce genre d'incident érode la confiance.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PATTERN 5 · ILLUSTRATION 3/3 -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Pattern 5 · 3/3</span>
+                    <h2>Pivot empirique</h2>
+                    <p class="center small"><span class="project-badge pulse">Pulse-Engine</span> Synchro historique</p>
+                    <div class="verbatim" style="font-size: 0.6em;">
+                        <strong style="color: var(--accent-5);">Hypothèse Codex :</strong> la synchro passe par GFDI (vu dans les protos).<br><br>
+                        <strong style="color: var(--accent-3);">Capture btsnoop d'une vraie sync Garmin Connect :</strong><br>
+                        — 400 paquets ACL sur les pipes <code>0x2018..0xE018</code>, rien sur GFDI.
+                    </div>
+                    <div class="verbatim" style="font-size: 0.6em;">
+                        <strong style="color: var(--accent-4);">Codex :</strong> « Conclusion claire : sur cette Fenix 7 Pro, le flux utile ne passe pas par GFDI. Il passe par MultiLink + pipe services. Je dois pivoter la couche historique. »
+                    </div>
+                    <div class="callout success">
+                        <strong>L'observation tue l'hypothèse.</strong> Bon checkpoint.
+                    </div>
+                    <aside class="notes">Ce moment est très représentatif du mode exploratoire. Codex avait un modèle mental basé sur l'analyse statique de l'APK. Le btsnoop capturé pendant une vraie session a montré que ce modèle était partiellement faux. Au lieu de rationaliser, Codex pivote et le dit clairement. C'est le meilleur type de checkpoint — celui qui accepte que la réalité l'emporte sur la théorie.</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- ANTI-PATTERNS DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Anti-patterns —</div>
+                    <h1>Ce qui coince</h1>
+                    <p class="subtitle">Les pièges à éviter</p>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- ANTI-PATTERN 1 -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Anti-pattern #1</span>
+                    <h2>La granularité</h2>
+                    <p class="center">Une IA d'idéation <strong>optimise pour la complétude</strong>, pas pour l'opérabilité.</p>
+                    <div class="verbatim">
+                        Premier jet sur Tachyon : <strong>1 change OpenSpec unique, énorme, irréimplémentable.</strong>
+                    </div>
+                    <div class="dialog">
+                        <span class="line"><span class="who me">Moi</span>: « Si tu avais peur que ce soit trop lourd, <strong>tu aurais dû découper</strong>. »</span>
+                    </div>
+                    <div class="callout success">
+                        <strong>→</strong> Il faut <em>demander explicitement</em> le découpage en unités livrables.
+                    </div>
+                    <aside class="notes">Ce n'est pas une faute de l'outil — c'est le réflexe par défaut du LLM qui essaie de tout couvrir dans une réponse.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- ANTI-PATTERN 2 -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Anti-pattern #2</span>
+                    <h2>Les blockers profonds</h2>
+                    <p class="center">Certains problèmes demandent un <strong>modèle mental</strong> que l'IA n'a pas.</p>
+                    <div class="verbatim" style="font-size: 0.62em;">
+                        <strong style="color: var(--accent-5);"><span class="project-badge tachyon" style="font-size: 0.85em;">Tachyon</span> <code>tcp-layer4-routing</code></strong><br><br>
+                        Codex essaie <strong>3 approches côté host</strong>. Toutes échouent pour la même raison : buffering 8 Ko dans la libc du <strong>guest WASM</strong>.<br><br>
+                        → Le fix n'est pas dans le host. Il est dans le guest.
+                    </div>
+                    <div class="callout">
+                        <strong>Diagnostic humain requis.</strong>
+                    </div>
+                    <aside class="notes">C'est un blocker classique sur WASI Preview 1. Codex a testé 3 solutions légitimes côté host, toutes mauvaises parce que le problème est côté guest. L'IA ne connaissait pas ce comportement spécifique de la plateforme.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- ANTI-PATTERN 3 -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">Anti-pattern #3</span>
+                    <h2>La dérive de contexte</h2>
+                    <p class="center">Le <strong>contexte technique</strong> <span class="small">(<code>cwd</code>, vars d'env, fichiers ouverts)</span><br>ne <strong>prime jamais</strong> sur l'<strong class="gradient-text">intention conversationnelle</strong>.</p>
+                    <div class="cards">
+                        <div class="card accent-4">
+                            <div class="card-title">📋 Règle</div>
+                            <div class="card-body">Commencer chaque session en <strong>réaffirmant le contexte métier</strong>.</div>
+                        </div>
+                        <div class="card accent-3">
+                            <div class="card-title">🔖 Protocole</div>
+                            <div class="card-body"><code>repo / branche / dernier commit attendu</code></div>
+                        </div>
+                    </div>
+                    <aside class="notes">Après l'incident cwd, j'ai pris l'habitude de commencer chaque session par : "Tu es dans le repo X, branche Y, le dernier commit attendu est Z, on travaille sur W." Ça prend 10 secondes et évite des heures de confusion.</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- CAS 1 DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Cas d'étude 1 —</div>
+                    <h1>Quand ça part<br>en vrille</h1>
+                    <p class="subtitle"><span class="project-badge hyperdesk">HyperDeskVR</span> &nbsp; Les patterns à l'épreuve d'une régression</p>
+                    <aside class="notes">Ce premier cas sort du registre "méthodo idéale" et montre comment les patterns se comportent sous stress. L'objectif n'est pas de raconter HyperDeskVR mais d'extraire ce que la crise révèle sur notre façon de travailler avec l'IA.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- POINT DE DÉPART -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🚨 Le point de départ</span>
+                    <h2>Une régression sur du code qui marchait vendredi</h2>
+                    <p class="center small">Un fix RDP qui marchait sur un banc de test (Nubia Z60) est porté sur le Quest 3.</p>
+                    <h4 style="text-align: center;">Résultat :</h4>
+                    <div class="cards">
+                        <div class="card accent-4">
+                            <div class="card-title">✅ RDP stable</div>
+                            <div class="card-body">Ne se déconnecte plus.</div>
+                        </div>
+                        <div class="card accent-1">
+                            <div class="card-title">❌ Caméra</div>
+                            <div class="card-body">Ne démarre plus.</div>
+                        </div>
+                        <div class="card accent-1">
+                            <div class="card-title">❌ QR scanner</div>
+                            <div class="card-body">Ne décode plus rien.</div>
+                        </div>
+                    </div>
+                    <aside class="notes">Le point de départ est banal — un fix porté d'un environnement à un autre casse quelque chose. Ce qui est intéressant c'est ce qui se passe ensuite.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- RABBIT HOLE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🕳️ Le rabbit hole</span>
+                    <h2>5 tentatives · 0 root cause</h2>
+                    <pre><code>1. gdi_init + SoftwareGdi=TRUE  ──► camera error 4
+2. Revert SoftwareGdi           ──► camera error 4 (persiste)
+3. Guard double xrAttachSession ──► crash XR évité, camera KO
+4. Essayer toutes les caméras   ──► pas mieux
+5. HEADSET_CAMERA + 1280x960    ──► camera OK… mais QR ne décode toujours pas
+                                 + impose un prompt permission inutile</code></pre>
+                    <div class="callout">
+                        <strong>Chaque fix était cohérent. Aucun n'adressait la cause.</strong>
+                    </div>
+                    <aside class="notes">C'est le classique rabbit hole. Chaque fix était plausible, bien argumenté, proprement livré. Mais l'agent partait d'une hypothèse (GDI casse la caméra) qu'il ne remettait pas en cause.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- HUMAIN COUPE-CIRCUIT -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">✋ Coupe-circuit</span>
+                    <h2>L'humain interrompt</h2>
+                    <div class="dialog">
+                        <span class="line"><span class="who me">Moi</span>: « Pourquoi tu veux modifier le code associé à ZXing alors que tu n'y as pas touché dans le commit qui a apporté le problème ? »</span>
+                    </div>
+                    <div class="dialog">
+                        <span class="line"><span class="who me">Moi</span>: « Avant de tester, je ne comprends pas pourquoi tu as ajouté <code>horizonos.permission.HEADSET_CAMERA</code> alors que cela fonctionnait avant sans. »</span>
+                    </div>
+                    <div class="callout success">
+                        <strong>→</strong> Quand l'agent s'entête sur une piste, <em>le user doit l'arrêter</em>.<br>
+                        <strong>Nouveau pattern :</strong> « Prouve-moi que ce changement est nécessaire. »
+                    </div>
+                    <aside class="notes">Ces deux interventions ont été décisives. L'agent avait perdu la trace du périmètre du bug. C'est un rôle humain spécifique qu'il faut assumer.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- HANDOFF FORMALISÉ -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🤝 Handoff</span>
+                    <h2>Le format pivot runtime</h2>
+                    <p class="center small">Après 5 fixes infructueux :</p>
+                    <div class="dialog">
+                        <span class="line"><span class="who me">Moi</span>: « Fais-moi un état des lieux complet, je vais demander à Codex de t'aider. »</span>
+                    </div>
+                    <p class="center"><strong>Le document produit devient un format pivot runtime :</strong></p>
+                    <div class="cards">
+                        <div class="card accent-3">
+                            <div class="card-title">🏛️ Architecture</div>
+                            <div class="card-body">En 3 lignes.</div>
+                        </div>
+                        <div class="card accent-1">
+                            <div class="card-title">🐛 Les 2 bugs</div>
+                            <div class="card-body">Interdépendants, fichiers clés.</div>
+                        </div>
+                        <div class="card accent-4">
+                            <div class="card-title">📜 Contexte</div>
+                            <div class="card-body">Git, pistes, repro.</div>
+                        </div>
+                    </div>
+                    <div class="callout success" style="margin-top: 0.5em;">
+                        <strong>→</strong> Codex reprend <em>sans tout réexpliquer</em>.
+                    </div>
+                    <aside class="notes">La chose la plus précieuse que j'ai faite dans cette crise. C'est devenu mon template pour tout handoff inter-agent depuis.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- LA VRAIE CAUSE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🎯 La vraie cause</span>
+                    <h2>10+ commits de debug pour… une ligne</h2>
+                    <pre><code class="cpp">// Avant — bug :
+return {
+  2.0f * (q.x * q.z + q.w * q.y),   // signe X inversé
+  2.0f * (q.y * q.z - q.w * q.x),   // signe Y inversé
+  -(1.0f - 2.0f * (q.x * q.x + q.y * q.y))
+};
+
+// Après — fix :
+return RotateVector(q, {0.0f, 0.0f, -1.0f});</code></pre>
+                    <div class="callout">
+                        Formule quaternion manuelle avec <strong>2 signes inversés</strong>.<br>
+                        Écrans affichés à <strong class="gradient-text">315° au lieu de 0°</strong>.
+                    </div>
+                    <aside class="notes">C'est presque comique. Après tous les détours, la vraie cause finale était une formule de rotation manuelle fausse, alors qu'une fonction RotateVector correcte existait déjà dans le même fichier. Les bugs les plus coûteux sont souvent les plus simples.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- LEÇONS HYPERDESKVR -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">📚 Leçons</span>
+                    <h2>Ce que la crise nous apprend</h2>
+                    <div class="lessons">
+                        <div class="lesson">
+                            <div class="lesson-num">1</div>
+                            <div class="lesson-content"><strong>L'humain comme coupe-circuit</strong>« Prouve-moi que ce changement est nécessaire. »</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">2</div>
+                            <div class="lesson-content"><strong>Le format pivot s'utilise aussi en runtime</strong>L'état des lieux est un outil de crise.</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">3</div>
+                            <div class="lesson-content"><strong>CI-only est un choix à coût latent</strong>Cher en crise.</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">4</div>
+                            <div class="lesson-content"><strong>Le symptôme ment</strong>Toujours remonter en amont.</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">5</div>
+                            <div class="lesson-content"><strong>Revert et bisect &gt; empiler les fixes</strong>Après 3 fixes sans effet, repartir propre.</div>
+                        </div>
+                    </div>
+                    <aside class="notes">Ces 5 leçons se généralisent. Elles m'ont fait ajuster ma méthodo : je commence maintenant chaque session de debugging par "quel est le dernier commit qui marchait" plutôt que "quelle hypothèse sur le bug".</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- CAS 2 DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Cas d'étude 2 —</div>
+                    <h1>Quand on ne sait pas<br>ce qu'on cherche</h1>
+                    <p class="subtitle"><span class="project-badge pulse">Pulse-Engine</span> &nbsp; Les patterns en mode exploratoire</p>
+                    <aside class="notes">Ce deuxième cas est complémentaire du premier. HyperDeskVR était une crise sur du connu. Pulse-Engine est une exploration de l'inconnu. Même méthodo, rythme différent.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- SETUP -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🔧 Le setup</span>
+                    <h2>Rétro-ingénierie d'un protocole</h2>
+                    <div class="feature-box">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content"><strong>Objectif</strong>Appli Android affichant en temps réel FC, SpO2, stress d'une montre Garmin.</div>
+                    </div>
+                    <div class="feature-box" style="border-left-color: var(--accent-1);">
+                        <div class="feature-icon">🚫</div>
+                        <div class="feature-content"><strong>Problème</strong>Aucune API publique. Protocole propriétaire.</div>
+                    </div>
+                    <div class="feature-box" style="border-left-color: var(--accent-4);">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-content"><strong>Approche</strong>Rétro-ingénierie.</div>
+                    </div>
+                    <pre><code>1. Extraire les APK de Garmin Connect (ADB)
+2. Décompresser, analyser les DEX et protobufs
+3. Trouver les contrats GDI.* et la table Metric.type
+4. Coder un client, d'abord en simulé puis en BLE réel
+5. Capturer une vraie session → pivoter si nécessaire
+6. Écrire les specs OpenSpec … à la fin</code></pre>
+                    <aside class="notes">Cette séquence est caractéristique du mode exploratoire. On ne peut pas speccer avant de comprendre. Et on ne peut pas comprendre sans coder un peu, tester, capturer, recommencer.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- PIVOT EMPIRIQUE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🔬 Pivot empirique</span>
+                    <h2>Quand la réalité l'emporte</h2>
+                    <p class="small"><strong>Hypothèse initiale</strong> <em>(statique, depuis les protos du DEX)</em> :</p>
+                    <div class="verbatim" style="font-size: 0.65em;">La synchro historique passe par le canal GFDI.</div>
+                    <p class="small"><strong>Capture <code>btsnoop</code> d'une vraie sync Garmin Connect :</strong></p>
+                    <pre><code>Pipes observés :
+  0x2018, 0x4018, 0x6018, 0x8018, 0xA018, 0xC018, 0xE018
+Canal GFDI : 0 octet</code></pre>
+                    <div class="verbatim" style="font-size: 0.6em;">
+                        <strong style="color: var(--accent-4);">Codex :</strong> « Sur cette Fenix 7 Pro, le flux utile ne passe pas par GFDI. Il passe par MultiLink + pipe services. Je dois pivoter la couche historique. »
+                    </div>
+                    <div class="callout success">
+                        <strong>L'observation écrase l'hypothèse.</strong> Pattern 5 en action.
+                    </div>
+                    <aside class="notes">Ce moment est très représentatif. L'analyse statique de l'APK suggérait une voie, la capture réelle en a montré une autre. Codex a pivoté sans s'entêter — c'est exactement ce qu'on veut voir. Note que c'est le contraire du rabbit hole HyperDeskVR où l'agent s'entêtait sur une hypothèse non validée.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- SPEC VIENT APRÈS -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">📚 Consolidation</span>
+                    <h2>La spec vient après</h2>
+                    <p class="center small">Une fois le code qui marche, consolidation OpenSpec :</p>
+                    <pre><code>openspec/
+├── project.md
+├── specs/
+│   ├── android-dashboard/spec.md
+│   ├── build-and-ci/spec.md
+│   └── garmin-live-telemetry/spec.md
+└── changes/archive/
+    ├── bootstrap-android-dashboard/
+    ├── rename-project-and-add-android-ci/
+    └── implement-live-garmin-ble-telemetry/</code></pre>
+                    <div class="callout success">
+                        <strong>Les specs ne sont pas un mensonge</strong> — elles décrivent du comportement éprouvé.<br>
+                        Le prochain chantier héritera de cette compréhension au lieu de la refaire.
+                    </div>
+                    <aside class="notes">C'est le point qui m'a fait changer d'avis sur les specs rétroactives. Quand on explore, on ne peut pas speccer avant — on ne sait pas. Mais consolider à la fin ce qu'on a appris, c'est un cadeau au futur. Et comme les specs décrivent du comportement déjà validé, elles ne mentent pas.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- HUMAIN BOUCLE PHYSIQUE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🧑‍🔧 Boucle physique</span>
+                    <h2>L'humain dans la boucle</h2>
+                    <p class="center small">Une particularité du mode exploratoire : <strong>l'humain est dans la boucle d'exécution</strong>.</p>
+                    <div class="dialog">
+                        <span class="line"><span class="who codex">Codex</span>: « Le code est prêt. Quand tu rebranches le téléphone, j'installe la nouvelle build. »</span>
+                        <span class="line"><span class="who me">Moi</span>: « Rebranché. »</span>
+                        <span class="line"><span class="who codex">Codex</span>: « Lance Garmin Connect, va sur la Fenix 7 Pro, puis juste avant d'appuyer Synchroniser, écris <strong>go</strong>. »</span>
+                        <span class="line"><span class="who me">Moi</span>: « go »</span>
+                        <span class="line"><span class="who codex">Codex</span>: « Capture OK. 400 paquets, 23 KB de trafic utile. »</span>
+                    </div>
+                    <div class="callout info">
+                        <strong>→</strong> L'agent orchestre des <em>actions physiques</em> que lui ne peut pas faire.<br>
+                        La boucle Pattern 4 s'étend au <strong>monde réel</strong>.
+                    </div>
+                    <aside class="notes">Cette collaboration multi-modale est une évolution intéressante. Codex ne peut pas porter un casque ni faire courir un fils, mais il peut coordonner ces actions pour obtenir les données dont il a besoin. Le rôle humain devient "exécutant physique de la boucle de feedback".</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- LEÇONS PULSE-ENGINE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">📚 Leçons</span>
+                    <h2>Mode exploratoire</h2>
+                    <div class="lessons">
+                        <div class="lesson">
+                            <div class="lesson-num">1</div>
+                            <div class="lesson-content"><strong>Speccer avant quand on sait. Après quand on explore.</strong>Le format pivot sert dans les deux cas, à deux moments différents.</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">2</div>
+                            <div class="lesson-content"><strong>L'observation empirique &gt; l'analyse statique</strong>Une capture <code>btsnoop</code> vaut mille lectures de DEX.</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">3</div>
+                            <div class="lesson-content"><strong>L'humain est dans la boucle physique</strong>Brancher un téléphone, lancer une app, cliquer au bon moment — ce sont des actions de la boucle.</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">4</div>
+                            <div class="lesson-content"><strong>Le mode exploratoire a un coût cognitif</strong>Plusieurs hypothèses en parallèle, pivots. Pas de spec = pas de contrat → charge mentale plus forte.</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">5</div>
+                            <div class="lesson-content"><strong>Pivot empirique &gt; pivot dogmatique</strong>L'agent qui change d'avis face à une donnée réelle est celui à qui on peut faire confiance.</div>
+                        </div>
+                    </div>
+                    <aside class="notes">Ces leçons élargissent la méthodologie au mode exploratoire, qui est probablement le plus mal couvert par les bonnes pratiques classiques. Le spec-driven development, l'agile, le TDD supposent tous qu'on sait vaguement où on va. Le mode exploratoire dit : on ne sait pas, et c'est OK si on consolide à la fin.</aside>
+                </section>
+
+
+                <!-- ============================================ -->
+                <!-- SYNTHÈSE DIVIDER -->
+                <!-- ============================================ -->
+                <section class="section-divider">
+                    <div class="chapter-number">— Synthèse —</div>
+                    <h1>Vue d'ensemble</h1>
+                    <p class="subtitle">Les patterns à travers les 3 modes</p>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- GRILLE AUTONOMIE/COMPLEXITÉ/MODE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">📊 Grille de lecture</span>
+                    <h2>Autonomie × complexité × mode</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th><span class="project-badge tachyon">Greenfield</span></th>
+                                <th><span class="project-badge hyperdesk">Crise</span></th>
+                                <th><span class="project-badge pulse">Exploration</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Format pivot</strong></td>
+                                <td>avant</td>
+                                <td>pendant</td>
+                                <td>après</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rythme</strong></td>
+                                <td>linéaire</td>
+                                <td>cyclique</td>
+                                <td>spirale</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rôle humain</strong></td>
+                                <td>architecte</td>
+                                <td>coupe-circuit</td>
+                                <td>orchestrateur physique</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Boucle</strong></td>
+                                <td>locale</td>
+                                <td>CI-only</td>
+                                <td>code + monde réel</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Risque</strong></td>
+                                <td>over-spec</td>
+                                <td>rabbit hole</td>
+                                <td>charge cognitive</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="callout success" style="margin-top: 0.6em;">
+                        <strong>→</strong> Les 5 patterns tiennent dans les 3 modes.<br>
+                        Seule la <em>cadence</em> et l'<em>ordre</em> changent.
+                    </div>
+                    <aside class="notes">Cette grille est ce que j'ai extrait de plus utile des trois projets. Elle me sert maintenant de checklist mentale : en entrant sur un nouveau projet, dans quel mode suis-je ? Les réponses orientent tout le reste — quand spec, quel rôle humain, quelle boucle, quel risque à surveiller.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- 5 PATTERNS EN UNE LIGNE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">✨ À retenir</span>
+                    <h2>Les 5 patterns en une ligne</h2>
+                    <div class="lessons">
+                        <div class="lesson">
+                            <div class="lesson-num">1</div>
+                            <div class="lesson-content"><strong>Taxonomie des IA</strong>scribe ≠ collègue</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">2</div>
+                            <div class="lesson-content"><strong>Format pivot versionné</strong><em>avant</em>, <em>pendant</em>, ou <em>après</em> selon le mode</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">3</div>
+                            <div class="lesson-content"><strong>Dialogue comme outil de design</strong>la boucle &gt; l'oracle</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">4</div>
+                            <div class="lesson-content"><strong>Boucle d'exécution fermée</strong>peut inclure le monde physique</div>
+                        </div>
+                        <div class="lesson">
+                            <div class="lesson-num">5</div>
+                            <div class="lesson-content"><strong>Checkpoints humains</strong>incluant le pivot empirique quand l'observation écrase l'hypothèse</div>
+                        </div>
+                    </div>
+                    <div class="callout success" style="margin-top: 0.6em;">
+                        <strong>→</strong> Transposables à <em>n'importe quel projet</em> où l'IA écrit du code.
+                    </div>
+                    <aside class="notes">Les cinq patterns restent ma boîte à outils minimale. Les trois projets m'ont appris à les nuancer : Pattern 2 a trois moments, Pattern 4 peut inclure le monde physique, Pattern 5 inclut maintenant le pivot empirique. Ils n'ont pas changé de nature ; ils ont gagné en richesse.</aside>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- À SUIVRE -->
+                <!-- ============================================ -->
+                <section>
+                    <span class="slide-tag">🔜 À suivre</span>
+                    <h2>Partie 2</h2>
+                    <p class="center">Application des patterns sur d'autres projets :</p>
+                    <div class="cards">
+                        <div class="card accent-1">
+                            <div class="card-title">💞 ENM dating app</div>
+                            <div class="card-body">UX research par personas.</div>
+                        </div>
+                        <div class="card accent-3">
+                            <div class="card-title">⚔️ Comparaison d'agents</div>
+                            <div class="card-body">Codex · Claude Code · Antigravity.</div>
+                        </div>
+                        <div class="card accent-4">
+                            <div class="card-title">📈 Métriques</div>
+                            <div class="card-body">Temps gagné · dette produite · ROI réel.</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================ -->
+                <!-- SLIDE FINALE -->
+                <!-- ============================================ -->
+                <section class="final-slide">
+                    <div class="chapter-number" style="font-size: 1.1em;">— Merci —</div>
+                    <h1>Questions ?</h1>
+                    <div class="warning" style="margin-top: 2em;">Sébastien ASTORI · 2026</div>
+                    <aside class="notes">Fin de la Partie 1. La Partie 2 ira chercher des terrains encore différents pour tester la transposabilité des patterns, notamment sur l'UX research par personas qui est un usage non-code de ces mêmes IA.</aside>
+                </section>
+        </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="./js/reveal.js"></script>
+
+    <script>
+        Reveal.initialize({
+            width: "98%",
+            height: "100%",
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            embedded: true,
+            transition: 'slide',
+            dependencies: [
+                { src: 'lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: 'plugin/highlight/highlight.js', async: true, condition: function () { return !!document.querySelector('pre code'); }, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: 'plugin/notes/notes.js', async: true }
+            ]
+        });
+    </script>
+    <script type="text/javascript" src="./plugin/zoom-js/zoom.js"></script>
+    <script type="text/javascript" src="./plugin/notes/notes.js"></script>
+
+</body>
+
+</html>
