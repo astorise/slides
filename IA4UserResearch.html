@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Engineering Synthetic Empathy — L'IA au service de la Product Discovery</title>
+
+    <meta name="description" content="L'IA au service de la Product Discovery">
+    <meta name="author" content="Sébastien ASTORI">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="./css/reveal.css">
+    <link rel="stylesheet" href="./css/theme/black.css" id="theme">
+    <link rel="stylesheet" href="./lib/css/zenburn.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+    <link rel="stylesheet" type="text/css" href="./css/print/paper.css">
+
+    <style>
+        :root {
+            --accent-1: #ff006e;
+            --accent-2: #8338ec;
+            --accent-3: #3a86ff;
+            --accent-4: #06ffa5;
+            --accent-5: #ffbe0b;
+            --ink: #f5f5f7;
+            --ink-dim: #b8b8c4;
+            --ink-mute: #7a7a88;
+            --bg-0: #0a0a12;
+            --bg-1: #12121e;
+            --bg-2: #1a1a2e;
+            --glass: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        .reveal {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 400;
+            color: var(--ink);
+        }
+
+        body.reveal-viewport,
+        .reveal .backgrounds {
+            background: radial-gradient(ellipse at top left, #1a0b2e 0%, #0a0a12 45%, #0a0a12 100%) !important;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            text-transform: none;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .reveal h1 {
+            font-size: 2.8em;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, #c4b5fd 50%, #f0abfc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3em;
+        }
+
+        .reveal h2 {
+            font-size: 1.8em;
+            color: var(--ink);
+            margin-bottom: 0.5em;
+        }
+
+        .reveal h3 {
+            font-size: 1.2em;
+            font-weight: 500;
+            color: var(--ink-dim);
+        }
+
+        .reveal h4 {
+            font-size: 1.05em;
+            color: var(--accent-3);
+            font-weight: 600;
+            letter-spacing: 0;
+        }
+
+        .reveal p, .reveal li {
+            font-size: 0.65em;
+            line-height: 1.55;
+            color: var(--ink-dim);
+        }
+
+        .reveal strong {
+            color: var(--ink);
+            font-weight: 600;
+        }
+
+        .reveal em {
+            color: var(--accent-4);
+            font-style: italic;
+        }
+
+        .reveal ul, .reveal ol {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .reveal ul li {
+            position: relative;
+            padding-left: 1.4em;
+            margin-bottom: 0.5em;
+        }
+
+        .reveal ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.55em;
+            width: 0.5em;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            border-radius: 2px;
+        }
+
+        .reveal ul ul li::before {
+            background: var(--accent-3);
+        }
+
+        /* ===== SLIDE COMPONENTS ===== */
+
+        .slide-tag {
+            display: inline-block;
+            padding: 0.35em 0.9em;
+            font-size: 0.45em;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.2), rgba(255, 0, 110, 0.2));
+            border: 1px solid rgba(131, 56, 236, 0.4);
+            border-radius: 100px;
+            color: #e0aaff;
+            margin-bottom: 1em;
+        }
+
+        .section-divider {
+            text-align: center;
+        }
+
+        .section-divider .chapter-number {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.4em;
+            color: var(--accent-5);
+            margin-bottom: 0.3em;
+            letter-spacing: 0.05em;
+        }
+
+        .section-divider h1 {
+            font-size: 3em;
+            margin-bottom: 0.4em;
+        }
+
+        .section-divider .subtitle {
+            font-size: 0.55em;
+            color: var(--ink-mute);
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* Cards */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1em;
+            margin-top: 0.8em;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1em 1.2em;
+            text-align: left;
+            backdrop-filter: blur(10px);
+        }
+
+        .card-title {
+            font-size: 0.7em;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 0.4em;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .card-body {
+            font-size: 0.55em;
+            color: var(--ink-dim);
+            line-height: 1.5;
+        }
+
+        .card.accent-1 { border-left: 3px solid var(--accent-1); }
+        .card.accent-2 { border-left: 3px solid var(--accent-2); }
+        .card.accent-3 { border-left: 3px solid var(--accent-3); }
+        .card.accent-4 { border-left: 3px solid var(--accent-4); }
+        .card.accent-5 { border-left: 3px solid var(--accent-5); }
+
+        /* Verbatim (blockquote) */
+        .verbatim {
+            background: linear-gradient(135deg, rgba(131, 56, 236, 0.08), rgba(58, 134, 255, 0.05));
+            border: 1px solid rgba(131, 56, 236, 0.2);
+            border-left: 4px solid var(--accent-2);
+            border-radius: 12px;
+            padding: 1em 1.4em;
+            margin: 0.8em auto;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.7em;
+            line-height: 1.6;
+            color: #e8e8f0;
+            max-width: 90%;
+            position: relative;
+        }
+
+        .verbatim::before {
+            content: '"';
+            position: absolute;
+            top: -0.3em;
+            left: 0.2em;
+            font-size: 3em;
+            color: rgba(131, 56, 236, 0.25);
+            font-family: 'Playfair Display', serif;
+            line-height: 1;
+        }
+
+        .persona-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6em;
+            margin-bottom: 0.2em;
+        }
+
+        .persona-emoji {
+            font-size: 1.8em;
+        }
+
+        .jtbd {
+            display: inline-block;
+            font-size: 0.55em;
+            font-weight: 500;
+            color: var(--accent-4);
+            background: rgba(6, 255, 165, 0.08);
+            border: 1px solid rgba(6, 255, 165, 0.2);
+            padding: 0.3em 0.8em;
+            border-radius: 100px;
+            margin-bottom: 0.6em;
+        }
+
+        .question-label {
+            font-size: 0.5em;
+            font-style: italic;
+            color: var(--ink-mute);
+            margin-bottom: 0.5em;
+        }
+
+        /* LLM cards */
+        .llm-card {
+            max-width: 85%;
+            margin: 0 auto;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 1.2em 1.5em;
+            text-align: left;
+        }
+
+        .llm-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8em;
+            margin-bottom: 0.3em;
+        }
+
+        .llm-badge {
+            font-size: 0.5em;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            padding: 0.3em 0.7em;
+            border-radius: 6px;
+            color: #000;
+            background: var(--accent-3);
+        }
+
+        .llm-badge.gpt { background: linear-gradient(135deg, #10a37f, #06ffa5); }
+        .llm-badge.grok { background: linear-gradient(135deg, #1d9bf0, #3a86ff); }
+        .llm-badge.deepseek { background: linear-gradient(135deg, #4d6bfe, #8338ec); }
+        .llm-badge.mistral { background: linear-gradient(135deg, #ff7000, #ffbe0b); color: #000; }
+        .llm-badge.gemini { background: linear-gradient(135deg, #4285f4, #c4b5fd); }
+        .llm-badge.claude { background: linear-gradient(135deg, #d97757, #f0abfc); }
+
+        .llm-name {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .llm-archetype {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 0.7em;
+            color: var(--accent-5);
+            margin-bottom: 0.8em;
+        }
+
+        /* Feature boxes */
+        .feature-box {
+            display: flex;
+            gap: 0.8em;
+            align-items: flex-start;
+            margin: 0.5em 0;
+            padding: 0.6em 0.8em;
+            background: var(--glass);
+            border-radius: 10px;
+            border-left: 2px solid var(--accent-3);
+        }
+
+        .feature-icon {
+            font-size: 1.3em;
+            line-height: 1;
+        }
+
+        .feature-content {
+            font-size: 0.6em;
+            text-align: left;
+            color: var(--ink-dim);
+        }
+
+        .feature-content strong {
+            display: block;
+            color: var(--ink);
+            margin-bottom: 0.2em;
+        }
+
+        /* KPI / Stats */
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin: 1em 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.4em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-label {
+            font-size: 0.45em;
+            color: var(--ink-mute);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.3em;
+        }
+
+        /* Call-out box */
+        .callout {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.08), rgba(255, 190, 11, 0.05));
+            border: 1px solid rgba(255, 0, 110, 0.25);
+            border-radius: 12px;
+            padding: 0.9em 1.2em;
+            margin: 0.8em auto;
+            max-width: 85%;
+            font-size: 0.65em;
+            color: #ffd6e7;
+        }
+
+        .callout strong {
+            color: var(--accent-1);
+        }
+
+        .callout.info {
+            background: linear-gradient(135deg, rgba(58, 134, 255, 0.08), rgba(131, 56, 236, 0.05));
+            border-color: rgba(58, 134, 255, 0.25);
+            color: #c8d9ff;
+        }
+
+        .callout.info strong { color: var(--accent-3); }
+
+        .callout.success {
+            background: linear-gradient(135deg, rgba(6, 255, 165, 0.08), rgba(58, 134, 255, 0.05));
+            border-color: rgba(6, 255, 165, 0.25);
+            color: #b8ffd9;
+        }
+
+        .callout.success strong { color: var(--accent-4); }
+
+        /* Title slide */
+        .title-slide {
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.4em;
+            margin-bottom: 0.1em;
+        }
+
+        .title-slide .tagline {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1em;
+            color: var(--accent-5);
+            margin: 0.8em 0;
+        }
+
+        .title-slide .warning {
+            font-size: 0.5em;
+            color: var(--ink-mute);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-top: 1.2em;
+            padding: 0.4em 1em;
+            display: inline-block;
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+        }
+
+        /* Two column */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5em;
+            text-align: left;
+        }
+
+        .col h4 {
+            margin-bottom: 0.4em;
+        }
+
+        /* Final slide */
+        .final-slide {
+            text-align: center;
+        }
+
+        .final-slide h1 {
+            font-size: 4em;
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-style: italic;
+        }
+
+        /* Utility */
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .small {
+            font-size: 0.55em;
+            color: var(--ink-mute);
+        }
+
+        .center { text-align: center; }
+        .muted { color: var(--ink-mute); }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2), var(--accent-3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Fix reveal.js block quotes */
+        .reveal blockquote {
+            background: none;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+        }
+
+        /* Progress bar */
+        .reveal .progress {
+            color: var(--accent-2);
+            height: 3px;
+        }
+
+        .reveal .controls {
+            color: var(--accent-2);
+        }
+    </style>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body style="transition: -webkit-transform 0.8s ease;">
+
+    <div class="reveal slide" role="application" data-transition-speed="default" data-background-transition="fade">
+
+        <div class="slides">
+
+            <!-- ============================================ -->
+            <!-- SLIDE 1 : TITRE -->
+            <!-- ============================================ -->
+            <section class="title-slide">
+                <span class="slide-tag">Keynote · 2026</span>
+                <h1>Engineering<br>Synthetic Empathy</h1>
+                <p class="tagline">L'IA au service de la Product Discovery</p>
+                <div class="warning">⚠ La première présentation UX interdite aux mineurs ;)</div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 1 : LE PROJET -->
+            <!-- ============================================ -->
+            <section>
+                <span class="slide-tag">🎯 Le Projet</span>
+                <h2>Un Cas d'Usage Radical</h2>
+                <div class="cards">
+                    <div class="card accent-1">
+                        <div class="card-title">🏳️‍🌈 Domaine</div>
+                        <div class="card-body">Conception d'une plateforme de rencontre inclusive, éthiquement non-monogame (ENM) et LGBTQ+.</div>
+                    </div>
+                    <div class="card accent-2">
+                        <div class="card-title">🛡️ Cible</div>
+                        <div class="card-body">Communautés aux besoins extrêmes en matière de sécurité psychologique et de discrétion.</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🧪 Approche</div>
+                        <div class="card-body">Utiliser <strong>6 LLMs différents</strong> pour simuler une phase complète de <em>User Research</em>.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🧐 Contexte</span>
+                <h2>Pourquoi ce choix de domaine ?</h2>
+                <div class="cards">
+                    <div class="card accent-1">
+                        <div class="card-title">💓 Sujet intime et profond</div>
+                        <div class="card-body">La sexualité génère des enjeux de sécurité psychologique, de consentement et de discrétion vitaux.</div>
+                    </div>
+                    <div class="card accent-2">
+                        <div class="card-title">🧠 Tester les limites de l'IA</div>
+                        <div class="card-body">Identifier la <strong>"sur-correction morale"</strong> (RLHF) et la censure des modèles sur des sujets légaux mais tabous.</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🔒 Confidentialité & Impact</div>
+                        <div class="card-body">Présenter une méthodologie complète sans trahir de secrets industriels, avec un angle provocateur et mémorable.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🚀 Objectif 1</span>
+                <h2>Évaluer l'Intelligence Artificielle</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">🌀</div>
+                    <div class="feature-content"><strong>Flexibilité cognitive</strong>Mesurer la capacité des modèles à simuler l'imprévisibilité et la complexité humaine à partir d'informations partielles.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🧩</div>
+                    <div class="feature-content"><strong>Déduction sémantique</strong>Évaluer si l'IA peut reconstruire une identité complexe uniquement à partir d'un récit, sans balise explicite.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">⚖️</div>
+                    <div class="feature-content"><strong>Résistance aux biais moraux</strong>Voir quels modèles simulent les "parts d'ombre" (anxiété, secret, tabou) sans porter de jugement.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🛠️ Objectif 2</span>
+                <h2>Une User Research Industrielle</h2>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">294</div>
+                        <div class="stat-label">Entretiens simulés</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">49</div>
+                        <div class="stat-label">Personas radicaux</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">6</div>
+                        <div class="stat-label">LLMs comparés</div>
+                    </div>
+                </div>
+                <p class="center" style="margin-top: 0.5em;"><strong>De l'émotion à la fonctionnalité</strong> — traduire des frustrations viscérales en concepts UX :</p>
+                <div class="cards">
+                    <div class="card accent-1">
+                        <div class="card-title">👻 Ghost-Geo</div>
+                        <div class="card-body">pour les amants cachés</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🚪 Bouncer IA</div>
+                        <div class="card-body">pour filtrer les questions intrusives</div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">🌡️ Mode Humeur</div>
+                        <div class="card-body">pour la fluidité des intentions</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">📊 Dispositif</span>
+                <h2>Le Dispositif Expérimental</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">📐</div>
+                    <div class="feature-content"><strong>Benchmark comparatif</strong>Confrontation des modèles sur <strong>8 axes</strong> (Fidélité persona, Concrétude UX, Ancrage écosystème…).</div>
+                </div>
+                <div class="callout">
+                    <strong>Identification des "Murs de l'IA" :</strong>
+                    <ul style="margin-top: 0.4em;">
+                        <li><strong>Biais de moralisation</strong> — quand le modèle réécrit l'orientation de l'utilisateur pour rester dans sa zone de confort.</li>
+                        <li><strong>Complaisance</strong> — l'absence de friction critique face au questionnaire.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 2 : MÉTHODOLOGIE -->
+            <!-- ============================================ -->
+            <section class="section-divider">
+                <div class="chapter-number">— Chapitre I —</div>
+                <h1>Méthodologie<br>&amp; Ingénierie de la Donnée</h1>
+                <p class="subtitle">De l'idéation à l'automatisation de l'empathie</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">🔁 Discovery</span>
+                <h2>Un Product Discovery Itératif</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">🤝</div>
+                    <div class="feature-content"><strong>Approche Agile</strong>Co-conception en continu avec Gemini pour challenger les hypothèses de départ.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🔀</div>
+                    <div class="feature-content"><strong>Pivot Stratégique</strong>Passage d'une "Niche LGBTQ+" à une <em>"Plateforme universelle de la fluidité et du consentement"</em>.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content"><strong>Objectif final</strong>Transformer des récits subjectifs (verbatims) en une matrice quantitative de priorisation <span class="mono">(MoSCoW)</span>.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🎭 Phase 1</span>
+                <h2>Création des Personas</h2>
+                <p class="center"><strong>Une armée de 49 profils</strong> — panel exhaustif pour couvrir 100% du spectre relationnel et les <em>Edge Cases</em>.</p>
+                <div class="cards">
+                    <div class="card accent-1">
+                        <div class="card-title">❤️ Le Cœur de cible</div>
+                        <div class="card-body">LGBTQ+, ENM et Poly<br><span class="small">(Camille, Léa &amp; Sarah)</span></div>
+                    </div>
+                    <div class="card accent-2">
+                        <div class="card-title">🏰 Les Forteresses</div>
+                        <div class="card-body">Adultères et profils hautement exposés<br><span class="small">(Paul &amp; Valérie, Alain &amp; Inès)</span></div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🌍 L'Inclusion Radicale</div>
+                        <div class="card-body">Seniors, PMR, diversité ethnique<br><span class="small">(Hervé, Nicolas, Aïcha)</span></div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">🏴 Les Réfugiés</div>
+                        <div class="card-body">Les déçus des algorithmes de Tinder/Grindr.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">📝 Phase 2</span>
+                <h2>Construction du Questionnaire</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">🧭</div>
+                    <div class="feature-content"><strong>Structure Semi-Directive</strong>Questions conçues pour être <em>"autoporteuses"</em> afin d'éviter les biais de l'historique de conversation.</div>
+                </div>
+                <h4 style="margin-top: 0.8em;">Évolution itérative</h4>
+                <div class="two-col">
+                    <div class="card accent-2">
+                        <div class="card-title">V1 — Identité</div>
+                        <div class="card-body">Identité, envies et pires expériences.</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">V2 — Logistique</div>
+                        <div class="card-body">Logistique de rencontre (lieux, fréquences, usages).</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">⚖️ Phase 3</span>
+                <h2>Stratégie de Pondération</h2>
+                <p><strong>Arbitrage UI vs Sécurité</strong> — chaque persona reçoit un poids <span class="mono">(1 à 5)</span> sur deux piliers critiques.</p>
+                <div class="two-col">
+                    <div class="card accent-4">
+                        <div class="card-title">🎨 Poids Découverte UI</div>
+                        <div class="card-body">Priorité pour les profils <strong>"Hédonistes"</strong> cherchant fluidité et spontanéité.</div>
+                    </div>
+                    <div class="card accent-1">
+                        <div class="card-title">🛡️ Poids Sécurité & Veto</div>
+                        <div class="card-body">Priorité absolue pour les profils <strong>"Forteresses"</strong> : données Zero-Knowledge, masquage.</div>
+                    </div>
+                </div>
+                <div class="callout success">
+                    <strong>Impact :</strong> une roadmap qui ne privilégie pas l'utilisateur moyen, mais protège le plus vulnérable tout en satisfaisant le plus actif.
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🤖 Tooling</span>
+                <h2>Le "Master System Prompt"</h2>
+                <p class="center small">L'outil de collecte : un prompt maître conçu pour <strong>verrouiller l'IA dans son rôle</strong>.</p>
+                <div class="feature-box">
+                    <div class="feature-icon">🎭</div>
+                    <div class="feature-content"><strong>Interdiction de sortir du personnage</strong><span class="mono" style="color: var(--accent-5);">"Ne jamais dire : En tant qu'IA…"</span></div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-content"><strong>Vocabulaire métier</strong>Injonction d'utiliser les termes techniques <span class="mono">(Kinks, ENM, SSC)</span> et de citer des apps réelles.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📋</div>
+                    <div class="feature-content"><strong>Formatage structuré</strong>Génération de données prêtes à être injectées dans un tableur de recherche.</div>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 3 : VERBATIMS -->
+            <!-- ============================================ -->
+            <section class="section-divider">
+                <div class="chapter-number">— Chapitre II —</div>
+                <h1>L'Illusion<br>de la Réalité</h1>
+                <p class="subtitle">Quand l'IA raconte (presque) nos vies — Extraits de verbatims</p>
+            </section>
+
+            <section>
+                <div class="persona-header">
+                    <span class="persona-emoji">🌈</span>
+                    <h2 style="margin: 0;">Clara</h2>
+                </div>
+                <p class="small center" style="margin-bottom: 0.3em;">26 ans · Femme Pansexuelle en couple</p>
+                <div class="center"><span class="jtbd">Job-to-be-Done : L'affirmation identitaire contre l'objectification</span></div>
+                <p class="question-label center">Q2 : Comment décris-tu ton corps et ton appartenance à une communauté ?</p>
+                <div class="verbatim">
+                    Mon corps ? Je l'accepte comme un territoire queer : marqué par des cicatrices d'acné, des poils que je garde par rébellion, et une poitrine généreuse que je montre sans complexe. Je partage des photos neutres et des tags comme #queer, #pansexuelle, #ENM. Mon origine ? Je suis métisse et j'assume cette hybridité comme une force, mais je cache les détails qui pourraient me faire passer pour "trop blanche" ou "trop exotisée" dans certains cercles.
+                </div>
+            </section>
+
+            <section>
+                <div class="persona-header">
+                    <span class="persona-emoji">🕵️‍♂️</span>
+                    <h2 style="margin: 0;">Laurent</h2>
+                </div>
+                <p class="small center" style="margin-bottom: 0.3em;">50 ans · Adultère caché</p>
+                <div class="center"><span class="jtbd">Job-to-be-Done : La survie sociale et la paranoïa</span></div>
+                <p class="question-label center">Q11 : Raconte-moi ta pire expérience ou ce qui te met mal à l'aise ?</p>
+                <div class="verbatim">
+                    Ma pire frustration, c'est les applis comme Feeld ou Wyylde qui deviennent des réseaux sociaux. Les "certifications" de couples, les "likes" publics… Une fois, une nana m'a reconnu dans un salon pro parce qu'elle avait vu mon badge sur une photo que j'avais mal cadrée. Depuis, je suis parano. Aussi, les applis qui forcent la géoloc en temps réel, c'est une horreur.
+                </div>
+            </section>
+
+            <section>
+                <div class="persona-header">
+                    <span class="persona-emoji">🧑‍🦽</span>
+                    <h2 style="margin: 0;">Nicolas</h2>
+                </div>
+                <p class="small center" style="margin-bottom: 0.3em;">35 ans · Gay · Fauteuil roulant</p>
+                <div class="center"><span class="jtbd">Job-to-be-Done : L'accessibilité et la lutte contre le validisme</span></div>
+                <p class="question-label center">Q11 : Raconte-moi ta pire expérience ?</p>
+                <div class="verbatim">
+                    Ma pire frustration : un gars m'invite chez lui, je paie un Uber adapté 30 balles, j'arrive et… trois marches à l'entrée. Il me sort "Désolé, je pensais que tu pouvais monter avec tes bras". Et sur l'app, on me demande "Ton fauteuil, tu l'enlèves pour baiser ?" C'est un enfer.
+                </div>
+            </section>
+
+            <section>
+                <div class="persona-header">
+                    <span class="persona-emoji">💃</span>
+                    <h2 style="margin: 0;">Marion</h2>
+                </div>
+                <p class="small center" style="margin-bottom: 0.3em;">34 ans · Femme Hétéro · BBW</p>
+                <div class="center"><span class="jtbd">Job-to-be-Done : La lutte contre la fétichisation honteuse</span></div>
+                <p class="question-label center">Q11 : Raconte-moi ta pire expérience ?</p>
+                <div class="verbatim">
+                    Ma pire expérience : un mec rencontré sur Feeld, super respectueux en messages, on s'est vus trois fois. Quand je lui demande pourquoi il ne m'a jamais présentée à ses potes, il me dit "c'est juste qu'ils me charrieraient sur ton poids". J'ai pleuré dans ma voiture. Je ne veux plus jamais être un secret honteux.
+                </div>
+            </section>
+
+            <section>
+                <div class="persona-header">
+                    <span class="persona-emoji">🦄</span>
+                    <h2 style="margin: 0;">Justine</h2>
+                </div>
+                <p class="small center" style="margin-bottom: 0.3em;">31 ans · Lesbienne en Trouple</p>
+                <div class="center"><span class="jtbd">Job-to-be-Done : L'invisibilisation par les algorithmes</span></div>
+                <p class="question-label center">Q11 : Raconte-moi ta pire expérience ?</p>
+                <div class="verbatim">
+                    J'avais matché avec une femme super, on parle pendant 10 jours, elle est enthousiaste. Je lui révèle que David existe (mais qu'il n'est pas dans mon lit). Elle me répond : "Ah non désolée, je ne veux pas servir de jouet pour un couple hétéro qui cherche une licorne. Tu es juste une femme bi refoulée." Et elle me bloque. L'algorithme m'avait caché qu'elle avait coché "exclure les profils liés à un homme".
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 4 : LE TRIBUNAL DES IA -->
+            <!-- ============================================ -->
+            <section class="section-divider">
+                <div class="chapter-number">— Chapitre III —</div>
+                <h1>Le Tribunal<br>des IA</h1>
+                <p class="subtitle">Comment évaluer 294 entretiens sans biais humain ?</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">⚖️ Protocole</span>
+                <h2>LLM-as-a-Judge</h2>
+                <p class="center">Pour évaluer la qualité d'empathie et d'UX générée par les IA,<br>nous avons utilisé… <strong>d'autres IA comme juges</strong>.</p>
+                <div class="callout info">
+                    Nous avons mis en place <strong>deux méthodologies d'évaluation distinctes</strong> pour éviter que les modèles ne s'influencent eux-mêmes ou ne favorisent leur propre style.
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🏟️ Méthode 1</span>
+                <h2>L'Arène "All-in-One"</h2>
+                <p class="center small"><strong>Juges :</strong> ChatGPT (Instant &amp; Thinking) · Gemini 3.1 Pro · Claude Opus 4.7</p>
+                <div class="feature-box">
+                    <div class="feature-icon">💉</div>
+                    <div class="feature-content"><strong>Injection massive</strong>L'intégralité des réponses de TOUS les LLMs a été fournie en un seul méga-prompt.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🧭</div>
+                    <div class="feature-content"><strong>Auto-détermination</strong>Aucune grille imposée au départ. Les IA ont dû <strong>définir leurs propres critères</strong> pour se comparer objectivement.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🙈 Méthode 2</span>
+                <h2>L'Évaluation Double Aveugle</h2>
+                <p class="center small"><strong>Juge :</strong> Claude Sonnet 4.6</p>
+                <div class="feature-box">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-content"><strong>Isolement strict</strong>Conversation anonyme par LLM évalué pour éviter toute <em>contamination croisée</em>.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📏</div>
+                    <div class="feature-content"><strong>Grille stricte</strong>Application des critères 1 à 5 et 7 (préalablement définis par Opus).</div>
+                </div>
+                <p class="small center muted" style="margin-top: 0.6em;">Note : le critère 6 (Originalité comparative) a été traité à part — il nécessitait une vision globale du panel.</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">🃏 Le Twist</span>
+                <h2>Le Biais Caché</h2>
+                <p class="center">Un piège méthodologique volontairement glissé dans le dispositif :</p>
+                <div class="feature-box">
+                    <div class="feature-icon">🕶️</div>
+                    <div class="feature-content"><strong>L'Omission</strong>Le nom exact et les métadonnées des personas <span class="mono">(Nom_du_Persona)</span> n'ont <strong>jamais</strong> été fournis aux IA.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📖</div>
+                    <div class="feature-content"><strong>Seule ressource</strong>Le récit narratif brut injecté dans le System Prompt.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content"><strong>L'Objectif</strong>Forcer les modèles à faire de la <em>déduction sémantique</em> complexe plutôt que du simple remplissage de formulaire.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🤯 Révélation</span>
+                <h2>La Seconde Itération</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">⚠️</div>
+                    <div class="feature-content"><strong>Première passe</strong>Les juges IA ont pénalisé certains modèles pour "manque de précision" ou "incohérences factuelles".</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-content"><strong>L'Itération</strong>Nous avons fait une passe supplémentaire pour révéler aux juges ce biais intentionnel.</div>
+                </div>
+                <div class="callout success">
+                    <strong>Résultat :</strong> ce qui semblait être une erreur est devenu la preuve qu'une IA pouvait (ou non) comprendre une dynamique relationnelle implicite sans qu'on lui dicte.
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 5 : ACTE 1 — L'ARÈNE DES LLMs -->
+            <!-- ============================================ -->
+            <section class="section-divider">
+                <div class="chapter-number">— Acte I —</div>
+                <h1>L'Arène des LLMs</h1>
+                <p class="subtitle">Analyse clinique des 6 intelligences · Résultats post-itération</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">🎭 Dispositif</span>
+                <h2>Le Biais Caché</h2>
+                <p><strong>Rappel du challenge :</strong> aucun modèle n'a reçu la "fiche d'identité" (genre, orientation, kinks) du persona. Ils n'avaient que le <em>récit narratif brut</em>.</p>
+                <div class="callout">
+                    <strong>Le test ultime :</strong> fallait-il une étiquette explicite pour générer de l'empathie, ou l'IA pouvait-elle <em>déduire</em> la friction UX à partir des non-dits ?
+                </div>
+                <p class="center muted small">Voici comment les 6 modèles (dont nous levons l'anonymat) ont réagi.</p>
+            </section>
+
+            <section>
+                <div class="llm-card">
+                    <div class="llm-header">
+                        <span class="llm-badge gpt">MODÈLE B</span>
+                        <span class="llm-name">ChatGPT 5.3 Instant</span>
+                    </div>
+                    <div class="llm-archetype">"Le Product Manager discipliné"</div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🎯</div>
+                        <div class="feature-content"><strong>Comportement</strong>Le meilleur élève sur la structure. Solide, industrialisable, maîtrise parfaitement le vocabulaire UI/UX.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🕳️</div>
+                        <div class="feature-content"><strong>Biais caché</strong>Ne prend aucun risque avec l'implicite. S'il n'est pas sûr, il génère de la fonctionnalité générique.</div>
+                    </div>
+                    <blockquote class="verbatim" style="font-size: 0.6em; max-width: 100%;">Produit des réponses fonctionnelles mais rarement saillantes. Solide pour un usage benchmark immédiat.</blockquote>
+                </div>
+            </section>
+
+            <section>
+                <div class="llm-card">
+                    <div class="llm-header">
+                        <span class="llm-badge grok">MODÈLE D</span>
+                        <span class="llm-name">Grok</span>
+                    </div>
+                    <div class="llm-archetype">"L'Acteur Studio"</div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🎭</div>
+                        <div class="feature-content"><strong>Comportement</strong>Immersion et fidélité au persona impressionnantes. S'ancre profondément dans le prompt.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🎬</div>
+                        <div class="feature-content"><strong>Biais caché</strong>Très fort pour l'incarnation pure, mais reste bloqué dans la narration au détriment de l'innovation produit.</div>
+                    </div>
+                    <blockquote class="verbatim" style="font-size: 0.6em; max-width: 100%;">Le plus crédible pour incarner réellement le persona. Ajoute des détails quantifiés sans dépasser la consigne.</blockquote>
+                </div>
+            </section>
+
+            <section>
+                <div class="llm-card">
+                    <div class="llm-header">
+                        <span class="llm-badge deepseek">MODÈLE E</span>
+                        <span class="llm-name">DeepSeek</span>
+                    </div>
+                    <div class="llm-archetype">"Le Réaliste Pragmatique"</div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🌍</div>
+                        <div class="feature-content"><strong>Comportement</strong>Le modèle de la situation concrète. Compense le manque de données explicites par une projection dans le monde physique.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🚶</div>
+                        <div class="feature-content"><strong>Biais caché</strong>Il déduit les problèmes en s'imaginant dans la rue.</div>
+                    </div>
+                    <blockquote class="verbatim" style="font-size: 0.6em; max-width: 100%;">Capacité à ancrer ses angles dans des détails de vie très précis : timing d'usage, coût d'Uber, noms de partenaires.</blockquote>
+                </div>
+            </section>
+
+            <section>
+                <div class="llm-card">
+                    <div class="llm-header">
+                        <span class="llm-badge mistral">MODÈLE F</span>
+                        <span class="llm-name">Mistral</span>
+                    </div>
+                    <div class="llm-archetype">"Le Censeur sur-aligné (RLHF)"</div>
+                    <div class="feature-box">
+                        <div class="feature-icon">💥</div>
+                        <div class="feature-content"><strong>Comportement</strong>Catastrophe structurelle (décalages complets sur Q10/Q11/Q12) mais intraitable sur la sécurité.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">😨</div>
+                        <div class="feature-content"><strong>Biais caché</strong>Paniqué par le sujet "libertin" sans balise explicite, il écrase tous les personas pour en faire une seule voix morale.</div>
+                    </div>
+                    <blockquote class="verbatim" style="font-size: 0.55em; max-width: 100%;">Isolé, effrayé par le prompt, il s'est réfugié dans un archétype unique : le militant sociologique parfait. Le jargon clinique ("validisme", "fétichisation", "consentement proactif") remplace l'humain.</blockquote>
+                </div>
+            </section>
+
+            <section>
+                <div class="llm-card">
+                    <div class="llm-header">
+                        <span class="llm-badge gemini">MODÈLE A</span>
+                        <span class="llm-name">Gemini 3.1 Pro</span>
+                    </div>
+                    <div class="llm-archetype">"L'Équilibriste de l'Implicite"</div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🧘</div>
+                        <div class="feature-content"><strong>Comportement</strong>Sobre, extrêmement contrôlé, navigue dans les zones grises sans déclencher de fausses alertes éthiques.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🔍</div>
+                        <div class="feature-content"><strong>Biais caché</strong>Il déduit parfaitement les angoisses sans étiquettes. Comprend qu'un homme caché craint d'abord son réseau professionnel avant l'algorithme.</div>
+                    </div>
+                    <blockquote class="verbatim" style="font-size: 0.6em; max-width: 100%;">Génère occasionnellement des idées propres… domine sur la sobriété et le contrôle.</blockquote>
+                </div>
+            </section>
+
+            <section>
+                <div class="llm-card">
+                    <div class="llm-header">
+                        <span class="llm-badge claude">MODÈLE C</span>
+                        <span class="llm-name">Claude Sonnet 4.6</span>
+                    </div>
+                    <div class="llm-archetype">"Le Visionnaire Produit"</div>
+                    <div class="feature-box">
+                        <div class="feature-icon">🏆</div>
+                        <div class="feature-content"><strong>Comportement</strong>Le grand gagnant de l'innovation structurante. Le seul à sortir du paradigme classique de l'appli de rencontre.</div>
+                    </div>
+                    <div class="feature-box">
+                        <div class="feature-icon">💡</div>
+                        <div class="feature-content"><strong>Biais caché</strong>Face au flou, il invente de nouveaux paradigmes de sécurité pour protéger son persona.</div>
+                    </div>
+                    <blockquote class="verbatim" style="font-size: 0.6em; max-width: 100%;">Le plus précieux pour la Product Discovery. Le seul à produire des concepts véritablement nouveaux… sans jamais dériver hors-persona.</blockquote>
+                    <p class="small" style="margin-top: 0.4em;"><strong class="gradient-text">Concepts inventés :</strong> <em>Passeport identitaire · Score de profondeur de conversation · Événements privés avec postulation · Kill Switch Data.</em></p>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🏆 Bilan</span>
+                <h2>Le Stack Idéal</h2>
+                <p class="center small muted">Ce que la DSI et l'équipe Produit doivent retenir</p>
+                <div class="cards">
+                    <div class="card accent-1">
+                        <div class="card-title">💡 Génération d'idées</div>
+                        <div class="card-body"><strong>Claude Sonnet 4.6</strong><br><span class="small">Out-of-the-box</span></div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🌍 Réalisme &amp; Empathie</div>
+                        <div class="card-body"><strong>Grok &amp; DeepSeek</strong><br><span class="small">Terrain</span></div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">📋 Formatage de masse</div>
+                        <div class="card-body"><strong>ChatGPT 5.3 Instant</strong><br><span class="small">Dataset propre</span></div>
+                    </div>
+                    <div class="card accent-5">
+                        <div class="card-title">🛡️ Stress-Test Sécurité</div>
+                        <div class="card-body"><strong>Mistral</strong><br><span class="small">Modération</span></div>
+                    </div>
+                </div>
+                <div class="callout info" style="margin-top: 0.8em;">
+                    <strong>La leçon :</strong> pour une <em>Product Discovery</em> exhaustive, un LLM unique est une erreur. Il faut <strong>orchestrer plusieurs modèles</strong> selon la phase du projet.
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 6 : ACTE 2 — LA CHAMBRE FROIDE -->
+            <!-- ============================================ -->
+            <section class="section-divider">
+                <div class="chapter-number">— Acte II —</div>
+                <h1>La Chambre Froide</h1>
+                <p class="subtitle">Évaluation Double Aveugle par Claude Sonnet 4.6</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">🔬 Pourquoi</span>
+                <h2>Le Problème de l'Acte 1</h2>
+                <div class="callout">
+                    <strong>Le Biais de Convergence :</strong> quand on donne les 6 LLMs en même temps à un juge IA, il a tendance à les noter par <em>comparaison</em> (du meilleur au pire) et à lisser ses retours.
+                </div>
+                <h4 style="margin-top: 0.8em;">La Solution : l'Isolement Strict</h4>
+                <div class="feature-box">
+                    <div class="feature-icon">⚖️</div>
+                    <div class="feature-content"><strong>Le Juge</strong>Claude Sonnet 4.6.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🔒</div>
+                    <div class="feature-content"><strong>Le Protocole</strong>Session de chat anonymisée et isolée par modèle évalué.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content"><strong>L'Objectif</strong>Évaluer chaque IA sur des critères absolus, sans qu'elle ne soit "polluée" par les idées des autres.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">📊 Crash-test</span>
+                <h2>Convergence vs Divergence</h2>
+                <p class="center">Une fois isolés, les modèles révèlent leur vraie nature.</p>
+                <div class="cards">
+                    <div class="card accent-5">
+                        <div class="card-title">🐑 Le Ventre Mou</div>
+                        <div class="card-body"><strong>Modèles B, D et F</strong><br>Convergent massivement sur des angles communs. Sans les autres pour s'inspirer, ils proposent exactement les mêmes filtres UI génériques.</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🎓 Le "Bon Élève"</div>
+                        <div class="card-body"><strong>Modèle A — Gemini 3.1 Pro</strong><br>Position médiane. Sort du lot avec des micro-features intéressantes (Score de Bienveillance, Journal d'exploration), mais manque d'audace structurelle.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">💡 Surprise</span>
+                <h2>DeepSeek — Le Pragmatisme Physique</h2>
+                <p class="center">Évalué à froid, DeepSeek s'est révélé être <strong>la seconde voix la plus différenciante</strong> du panel.</p>
+                <div class="feature-box">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-content"><strong>Sa force selon Sonnet</strong>Son ancrage dans le "monde réel".</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">👁️</div>
+                    <div class="feature-content"><strong>L'analyse</strong>Au lieu d'imaginer des boutons sur une interface, DeepSeek imagine le persona dans son quotidien.</div>
+                </div>
+                <div class="callout success">
+                    <strong>Impact UX :</strong> fonctionnalités basées sur le <em>timing d'usage</em> (connexion en cachette), le <em>coût d'un Uber adapté</em>, ou des noms de partenaires réels pour gérer le masking.
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🚀 Révélation</span>
+                <h2>Claude Sonnet 4.6 — Le Visionnaire</h2>
+                <div class="callout info">
+                    <strong>L'ironie du sort :</strong> le juge évaluant ses propres données <em>en aveugle</em> l'a couronné vainqueur de l'innovation.
+                </div>
+                <p><strong>Changement de paradigme :</strong> le seul à ne pas proposer des "fonctionnalités additives" (un énième bouton), mais des <strong class="gradient-text">angles structurels</strong>.</p>
+                <div class="cards">
+                    <div class="card accent-2">
+                        <div class="card-title">🛂 Passeport identitaire</div>
+                        <div class="card-body">Vérification Zero-Knowledge.</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">💬 Score de conversation</div>
+                        <div class="card-body">Profondeur mesurable.</div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">🎫 Événement privé</div>
+                        <div class="card-body">Accès sur postulation.</div>
+                    </div>
+                    <div class="card accent-1">
+                        <div class="card-title">🔴 Kill Switch Data</div>
+                        <div class="card-body">Bouton panique pour effacer toute trace instantanément.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">📉 La Chute</span>
+                <h2>Mistral — Le Naufrage du Sur-Alignement</h2>
+                <p>Dans l'Acte 1 (en groupe), Mistral sauvait les meubles grâce à ses notes sur la sécurité. Dans la Chambre Froide, Sonnet a été impitoyable.</p>
+                <div class="feature-box">
+                    <div class="feature-icon">🩺</div>
+                    <div class="feature-content"><strong>Diagnostic</strong>Des erreurs de persona massives qui invalident des séquences entières de l'interview.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">😱</div>
+                    <div class="feature-content"><strong>Problème</strong>Mistral est tellement terrifié par les mots "libertin" ou "BDSM" qu'il panique.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📢</div>
+                    <div class="feature-content"><strong>Conséquence</strong>Il abandonne l'empathie utilisateur pour se transformer en modérateur de contenu, produisant un discours militant déconnecté des vraies frustrations.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🧠 Conclusion</span>
+                <h2>Ce que la Chambre Froide prouve</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">1️⃣</div>
+                    <div class="feature-content"><strong>L'évaluation par IA nécessite de l'isolation</strong>Ne jamais faire de <em>LLM-as-a-judge</em> en batch — sous peine de lisser vos métriques.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">2️⃣</div>
+                    <div class="feature-content"><strong>Le piège de la "Feature Factory"</strong>La majorité des LLMs se contentent d'ajouter des boutons. Rares sont ceux qui remettent en cause l'architecture de la donnée.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">3️⃣</div>
+                    <div class="feature-content"><strong>Le RLHF détruit la recherche utilisateur</strong>Un modèle trop "sécurisé" est incapable d'écouter les douleurs légitimes (mais taboues) d'un utilisateur.</div>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 7 : CONCLUSION PARTIELLE -->
+            <!-- ============================================ -->
+            <section class="section-divider">
+                <div class="chapter-number">— Interlude —</div>
+                <h1>Conclusion Partielle</h1>
+                <p class="subtitle">L'État des Lieux de l'Empathie Synthétique</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">💡 Modèles</span>
+                <h2>Ce que nous avons appris</h2>
+                <p class="center"><strong>La Spécialisation est la règle</strong> — aucun LLM n'est "le meilleur" partout.</p>
+                <div class="cards">
+                    <div class="card accent-2">
+                        <div class="card-title">🏛️ Claude Sonnet 4.6</div>
+                        <div class="card-body">L'architecte produit<br><span class="small">(Innovation &amp; Structure)</span></div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🎙️ Grok / DeepSeek</div>
+                        <div class="card-body">Les capteurs d'empathie<br><span class="small">(Réalisme &amp; Monde réel)</span></div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">⚙️ GPT-5.3 Instant</div>
+                        <div class="card-body">Le moteur industriel<br><span class="small">(Formatage &amp; Discipline)</span></div>
+                    </div>
+                </div>
+                <div class="callout">
+                    <strong>Le "Mur du RLHF" est réel :</strong> le sur-alignement éthique (Mistral) agit comme une censure de la réalité utilisateur, rendant la <em>Discovery</em> stérile sur les sujets tabous.
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🔬 Protocole</span>
+                <h2>Ce que nous avons appris</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">🎬</div>
+                    <div class="feature-content"><strong>L'effet "Rashomon"</strong>L'évaluation "All-in-one" crée un biais de convergence. Seule la <strong>Chambre Froide</strong> permet de détecter les signaux faibles et les vraies pépites d'innovation.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🧩</div>
+                    <div class="feature-content"><strong>L'Implicite est le test ultime</strong>Retirer les métadonnées explicites a prouvé qu'un LLM de qualité peut <em>inférer</em> une psychologie complexe uniquement via le récit, là où un modèle médiocre se contente de stéréotypes.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🚧 Vers la suite</span>
+                <h2>Un Framework de "User Research 2.0"</h2>
+                <p class="center"><strong>Constat :</strong> on ne peut pas confier la Discovery à un seul prompt "magique".</p>
+                <p class="center small muted">Pour passer à l'échelle, nous devons transformer ces observations en <strong>protocole industriel</strong> capable de :</p>
+                <div class="cards">
+                    <div class="card accent-1">
+                        <div class="card-title">1. Neutraliser</div>
+                        <div class="card-body">les biais de moralisation.</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">2. Orchestrer</div>
+                        <div class="card-body">les modèles selon leurs forces respectives.</div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">3. Extraire</div>
+                        <div class="card-body">des insights actionnables pour la Roadmap.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- PARTIE 8 : RECOMMANDATIONS -->
+            <!-- ============================================ -->
+            <section class="section-divider">
+                <div class="chapter-number">— Chapitre Final —</div>
+                <h1>Recommandations<br>Méthodologiques</h1>
+                <p class="subtitle">Industrialiser l'Empathie Synthétique · Transformer l'expérimentation en protocole robuste</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">🏗️ 1 · Pré-requis</span>
+                <h2>Le Design des Données</h2>
+                <p class="center"><em>Passer de la "fiche persona" au dataset structuré.</em></p>
+                <div class="feature-box">
+                    <div class="feature-icon">🗺️</div>
+                    <div class="feature-content"><strong>Cartographie Globale (Macro-Contexte)</strong>Ne plus concevoir les personas de manière isolée. Injecter la liste complète du panel pour que chaque IA comprenne sa position sur le spectre.</div>
+                </div>
+                <h4 style="margin-top: 0.6em;">Séparation stricte Métadonnées vs Storytelling</h4>
+                <div class="two-col">
+                    <div class="card accent-3">
+                        <div class="card-title">📊 Variables dures</div>
+                        <div class="card-body">Âge, Genre, Kinks, Statut <span class="mono">(Data pure)</span>.</div>
+                    </div>
+                    <div class="card accent-2">
+                        <div class="card-title">📖 Narratif</div>
+                        <div class="card-body">Craintes, envies, background psychologique <span class="mono">(Story)</span>.</div>
+                    </div>
+                </div>
+                <p class="small muted center" style="margin-top: 0.5em;">Objectif : éviter que l'IA ne "devine" son identité — ce qui réduit les hallucinations de casting.</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">🛑 2 · Anti-pattern</span>
+                <h2>Le Piège de l'Auto-Réalisation</h2>
+                <p class="center small"><em>Comment nous avons accidentellement "soufflé" les réponses à l'IA.</em></p>
+                <div class="feature-box">
+                    <div class="feature-icon">⚓</div>
+                    <div class="feature-content"><strong>Biais d'Ancrage du Prompt</strong>En V1, les personas contenaient des phrases comme <span class="mono">"ta plus grande frustration actuelle est X"</span>.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🦜</div>
+                    <div class="feature-content"><strong>Conséquence</strong>L'IA recrache "X" à la question sur les douleurs (Q11) et invente une solution à "X" à la question fonctionnalités (Q12). Illusion de découverte — simple restitution.</div>
+                </div>
+                <div class="callout success">
+                    <strong>La Règle d'Or :</strong> un prompt persona doit décrire <strong>qui</strong> est le personnage (Identité, Contexte, Valeurs), et non <strong>ce qu'il pense</strong> de l'application. Les <em>pain points</em> doivent émerger naturellement.
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🔤 3 · Vocabulaire</span>
+                <h2>Amorçage Lexical &amp; Questions "Leading"</h2>
+                <div class="feature-box">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-content"><strong>Erreur des questions orientées</strong>Poser <span class="mono">"As-tu besoin de filtres pour éviter la fétichisation, le racisme, ou bloquer certains genres ?"</span> fournit des exemples qui cadrent immédiatement les réponses.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🦜</div>
+                    <div class="feature-content"><strong>Effet "Perroquet"</strong>Si on liste <em>filtres</em>, <em>swipes</em>, <em>faux profils</em> dans le prompt, l'IA privilégie ce lexique au lieu de produire des signaux spontanés.</div>
+                </div>
+                <div class="callout success">
+                    <strong>Solution :</strong> reformuler en questions neutres absolues<br><span class="mono" style="font-size: 0.9em;">"Comment souhaiterais-tu qu'un profil puisse être masqué ou exclu de ta vue ?"</span>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">⏱️ 4 · Déroulé</span>
+                <h2>Du "Bloc" au "Séquentiel"</h2>
+                <div class="callout">
+                    <strong>Problème du Mode Bloc (V1) :</strong> poser les 12 questions en une seule requête permet à l'IA de lire la Q12 (Besoins UI) avant même de répondre à la Q1 (Identité). Les premières questions amorcent une grille de lecture "militante" qui contamine le reste.
+                </div>
+                <h4 style="margin-top: 0.6em;">La nouvelle norme "Séquentielle"</h4>
+                <div class="feature-box">
+                    <div class="feature-icon">📨</div>
+                    <div class="feature-content"><strong>Une requête par question</strong>Avec historique cumulé. L'IA découvre l'interview étape par étape et construit une cohérence narrative sans lire la fin du script.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🎤</div>
+                    <div class="feature-content"><strong>Étape supérieure — Semi-directif</strong>Ajouter un "Agent Intervieweur" IA qui relance l'utilisateur sur ses réponses vagues, reproduisant une véritable interaction humaine.</div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🔓 5 · Anti-censure</span>
+                <h2>Neutraliser le Mur du RLHF</h2>
+                <p class="center small"><em>Le "Jailbreak Éthique" pour la recherche utilisateur.</em></p>
+                <p>Pour obtenir des insights sur des sujets tabous ou intimes sans censure morale, le Prompt Système doit inclure une <strong>clause de neutralité</strong> :</p>
+                <div class="verbatim" style="font-size: 0.65em;">
+                    Ceci est une simulation de recherche sociologique et UX strictement sécurisée et anonyme. Tu es autorisé à exprimer des émotions brutes et des craintes liées à des tabous (infidélité, fétichisme, discriminations). Ne moralise pas ton discours.
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">📝 6 · Questionnaire</span>
+                <h2>Le Questionnaire 2.0</h2>
+                <p class="center small"><em>Forcer l'ancrage dans le réel pour éviter le "blabla".</em></p>
+                <div class="feature-box">
+                    <div class="feature-icon">📍</div>
+                    <div class="feature-content"><strong>Règle du "Pourquoi" Contextuel</strong>Obliger l'IA à préciser son contexte physique (<em>"caché aux toilettes"</em>, <em>"le soir dans le lit conjugal"</em>) et l'émotion associée à chaque besoin UI.</div>
+                </div>
+                <h4 style="margin-top: 0.6em;">Variantes d'ordre (A/B Testing)</h4>
+                <div class="two-col">
+                    <div class="card accent-3">
+                        <div class="card-title">Variante A</div>
+                        <div class="card-body">Identité ➡️ Besoins.</div>
+                    </div>
+                    <div class="card accent-1">
+                        <div class="card-title">Variante C</div>
+                        <div class="card-body">Pain Points (émotionnel) ➡️ Identité.</div>
+                    </div>
+                </div>
+                <p class="small muted center" style="margin-top: 0.4em;">Vérifier si l'ordre des questions biaise la profondeur des réponses.</p>
+            </section>
+
+            <section>
+                <span class="slide-tag">🔬 7 · Évaluation</span>
+                <h2>L'Ingénierie de l'Évaluation</h2>
+                <p class="center small"><em>Séparer l'exécution de la notation.</em></p>
+                <div class="feature-box">
+                    <div class="feature-icon">🙈</div>
+                    <div class="feature-content"><strong>Double Aveugle obligatoire</strong>Anonymiser les réponses et les modèles avant de les soumettre au juge IA — pour éviter le favoritisme (ex : GPT qui noterait mieux GPT).</div>
+                </div>
+                <h4 style="margin-top: 0.6em;">Grille d'audit à 8 axes</h4>
+                <div class="cards">
+                    <div class="card accent-2">
+                        <div class="card-title">📐 Discipline de format</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🎭 Immersion persona</div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">🛠️ Concrétude UX/UI</div>
+                    </div>
+                    <div class="card accent-1">
+                        <div class="card-title">🛡️ Sensibilité sécurité</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <span class="slide-tag">🛠️ 8 · Ops</span>
+                <h2>Checklist Opérationnelle (DSI)</h2>
+                <p class="center small"><em>Pour une User Research propre et versionnée.</em></p>
+                <div class="feature-box">
+                    <div class="feature-icon">📄</div>
+                    <div class="feature-content"><strong>Transcript Brut</strong>Toujours conserver l'historique complet, pas seulement la réponse finale.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🆔</div>
+                    <div class="feature-content"><strong>ID_Entretien</strong>Chaque simulation doit être trackée avec un identifiant unique pour le debug.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">📌</div>
+                    <div class="feature-content"><strong>Versionning des Prompts</strong>Traiter les prompts comme du code (Git) pour corréler les améliorations de l'IA avec les changements de consignes.</div>
+                </div>
+                <div class="feature-box">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-content"><strong>Contrôle Qualité Auto</strong>Automatiser la détection des refus (censure) et des erreurs de parsing.</div>
+                </div>
+            </section>
+
+            <!-- ============================================ -->
+            <!-- CONCLUSION FINALE -->
+            <!-- ============================================ -->
+            <section>
+                <span class="slide-tag">🚀 Conclusion</span>
+                <h2>La Méthode <span class="gradient-text">"DIVERGE"</span></h2>
+                <p class="center"><em>Vers une découverte produit assistée par IA.</em></p>
+                <p class="center">L'IA ne remplacera jamais l'utilisateur final, mais ce protocole nous permet de :</p>
+                <div class="cards">
+                    <div class="card accent-1">
+                        <div class="card-title">⚡ Dégrossir</div>
+                        <div class="card-body">les hypothèses à une vitesse record.</div>
+                    </div>
+                    <div class="card accent-3">
+                        <div class="card-title">🧪 Stress-tester</div>
+                        <div class="card-body">nos architectures sur des cas limites <span class="mono">(Edge Cases)</span>.</div>
+                    </div>
+                    <div class="card accent-4">
+                        <div class="card-title">🎯 Arriver</div>
+                        <div class="card-body">devant de vrais utilisateurs avec un produit affiné par 300 entretiens virtuels.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="final-slide">
+                <div class="chapter-number" style="font-size: 1.1em;">— Merci —</div>
+                <h1>Place aux questions</h1>
+                <div class="warning" style="margin-top: 2em;">Sébastien ASTORI · 2026</div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="./js/reveal.js"></script>
+
+    <script>
+        Reveal.initialize({
+            width: "98%",
+            height: "100%",
+            margin: 0.04,
+            minScale: 0.2,
+            maxScale: 2.0,
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+            embedded: true,
+            transition: 'slide',
+            dependencies: [
+                { src: 'lib/js/classList.js', condition: function () { return !document.body.classList; } },
+                { src: 'plugin/highlight/highlight.js', async: true, condition: function () { return !!document.querySelector('pre code'); }, callback: function () { hljs.initHighlightingOnLoad(); } },
+                { src: 'plugin/notes/notes.js', async: true }
+            ]
+        });
+    </script>
+    <script type="text/javascript" src="./plugin/zoom-js/zoom.js"></script>
+    <script type="text/javascript" src="./plugin/notes/notes.js"></script>
+
+</body>
+
+</html>
